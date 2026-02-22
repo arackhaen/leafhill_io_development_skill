@@ -78,6 +78,21 @@ Projects using this skill can place a `leafhill.config.md` in the project root t
 
 Config values override the corresponding Common Specification defaults. Any key left blank or removed falls back to the default.
 
+## 6. Session Exit Protocol
+
+**Before ending a Claude Code session, always export and save work to file.**
+
+This is mandatory. Before the session ends:
+
+1. **Export a session summary** to a timestamped file in the project root: `YYYY-MM-DD-HHMMSS-session-description.txt`
+2. The export must include:
+   - What was worked on (tasks completed, files changed)
+   - Current state (what's done, what's in progress, what's pending)
+   - Any decisions made or context the next session needs
+   - Next steps or open items
+3. **Never exit without saving.** If the user signals they are done or the session is ending, proactively create the export file before wrapping up.
+4. **Remind the user** if they attempt to end the session without an export: _"Before we wrap up, let me save a session summary file."_
+
 ---
 
 # Part II — Common Specifications
