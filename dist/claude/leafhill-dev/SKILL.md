@@ -1,11 +1,13 @@
-# leafhill.io Development Skill
-
-**Alias:** `leafhill_dev`
-**Version:** 1.1.0
-**Author:** leafhill.io
-**Description:** Universal AI coding skill for system development — coding standards, project scaffolding, and development workflows. Works with any AI coding tool; guaranteed to work with Claude Code.
-
 ---
+name: leafhill-dev
+description: Universal AI coding skill for system development — coding standards, project scaffolding, and development workflows. Works with any AI coding tool.
+license: Apache-2.0
+metadata:
+  author: leafhill.io
+  version: "1.1.0"
+---
+
+# leafhill.io Development Skill
 
 ## 0. Prioritization
 

@@ -1,6 +1,8 @@
 # Installation Guide
 
-This guide covers how to install the leafhill_dev skill for every supported platform, how to configure it per-project, and how to verify it's working.
+This guide covers how to install the leafhill-dev skill for every supported platform, how to configure it per-project, and how to verify it's working.
+
+This skill follows the [Agent Skills](https://agentskills.io) open standard, which means it works across Claude Code, Cursor, Gemini CLI, VS Code, Codex, GitHub Copilot, and other compatible tools.
 
 ---
 
@@ -31,7 +33,26 @@ No package manager, build step, or runtime is required. The skill consists entir
 
 ## 2. Claude Code
 
-Claude Code loads skills from a `skills/` directory. You can install at the project level (recommended) or globally.
+Claude Code auto-discovers skills from a `skills/` directory. Each skill is a directory containing a `SKILL.md` file with YAML frontmatter. You can install at the project level (recommended) or globally.
+
+### Skill File Format
+
+The `SKILL.md` file must start with YAML frontmatter containing at minimum `name` and `description`:
+
+```yaml
+---
+name: leafhill-dev
+description: Universal AI coding skill for system development — coding standards, project scaffolding, and development workflows.
+license: Apache-2.0
+metadata:
+  author: leafhill.io
+  version: "1.1.0"
+---
+```
+
+The `name` field must use lowercase alphanumeric characters and hyphens only (no underscores). The directory name must match the `name` field.
+
+The distribution copy at `dist/claude/leafhill-dev/SKILL.md` already includes this frontmatter — no manual editing is needed.
 
 ### Project-Level Installation (Recommended)
 
@@ -48,13 +69,13 @@ cd /path/to/your/project
 ```
 mkdir .claude
 mkdir .claude/skills
-mkdir .claude/skills/leafhill_dev
+mkdir .claude/skills/leafhill-dev
 ```
 
 **Step 3:** Copy the skill file.
 
 ```
-cp /path/to/leafhill_dev/dist/claude/leafhill_dev/SKILL.md .claude/skills/leafhill_dev/SKILL.md
+cp /path/to/leafhill_dev/dist/claude/leafhill-dev/SKILL.md .claude/skills/leafhill-dev/SKILL.md
 ```
 
 **Step 4 (optional):** Add the config template to your project.
@@ -72,20 +93,43 @@ This makes the skill available across all projects for your user.
 **Step 1:** Create the global skills directory.
 
 ```
-mkdir -p ~/.claude/skills/leafhill_dev
+mkdir -p ~/.claude/skills/leafhill-dev
 ```
 
 **Step 2:** Copy the skill file.
 
 ```
-cp /path/to/leafhill_dev/dist/claude/leafhill_dev/SKILL.md ~/.claude/skills/leafhill_dev/SKILL.md
+cp /path/to/leafhill_dev/dist/claude/leafhill-dev/SKILL.md ~/.claude/skills/leafhill-dev/SKILL.md
+```
+
+### Advanced Claude Code Features
+
+The SKILL.md frontmatter supports additional Claude Code-specific options:
+
+| Field | Description | Default |
+|-------|-------------|---------|
+| `disable-model-invocation` | When `true`, only the user can invoke the skill (via `/leafhill-dev`). Claude won't auto-invoke it. Use for skills with side effects. | `false` |
+| `user-invocable` | When `false`, only Claude can invoke the skill (background knowledge). The user cannot trigger it manually. | `true` |
+| `context` | Set to `fork` to run the skill in an isolated subagent context. | (none) |
+| `allowed-tools` | Space-delimited list of tools the skill can use without prompting (e.g., `Read Grep Glob`). | (none) |
+
+Dynamic context injection is also supported — wrap shell commands in backticks prefixed with `!` to execute them before the skill loads:
+
+```yaml
+---
+name: my-skill
+description: Example with dynamic context
+---
+
+Current branch: !`git branch --show-current`
 ```
 
 ### Notes for Claude Code
 
 - Project-level skills override global skills of the same name.
-- Claude Code automatically detects new skill files — no restart required.
-- The skill file must be named `SKILL.md` inside a directory matching the skill alias.
+- Skills are discovered at session startup. Adding a new skill directory requires starting a new Claude Code session.
+- The skill file must be named `SKILL.md` inside a directory matching the skill name.
+- The directory name must match the `name` field in the YAML frontmatter and must use hyphens, not underscores.
 
 ---
 
@@ -150,6 +194,10 @@ cp /path/to/leafhill_dev/dist/config/leafhill.config.template.md leafhill.config
 ### If Your Tool Only Accepts Plain Text
 
 The generic file is standard markdown and works as plain text. You can also use the plain-text reference at `txt/distribution-guide.txt`.
+
+### Agent Skills Compatibility
+
+This skill follows the [Agent Skills](https://agentskills.io) open standard. Any tool that supports Agent Skills can load the skill directly from the `dist/claude/` directory using its standard discovery mechanism.
 
 ---
 
@@ -216,11 +264,11 @@ roam-code and superpowers are **enabled by default** and the skill expects them 
 
 ### roam-code (Priority 2)
 
-Provides codebase navigation and context gathering. Install roam-code following its own documentation. The leafhill_dev skill will automatically use it at priority 2.
+Provides codebase navigation and context gathering. Install roam-code following its own documentation. The leafhill-dev skill will automatically use it at priority 2.
 
 ### superpowers skill (Priority 3)
 
-Provides workflow orchestration — brainstorming, debugging, TDD, code review, and more. Install following superpowers documentation. The leafhill_dev skill will automatically use it at priority 3.
+Provides workflow orchestration — brainstorming, debugging, TDD, code review, and more. Install following superpowers documentation. The leafhill-dev skill will automatically use it at priority 3.
 
 ### Priority Order
 
@@ -251,7 +299,13 @@ After installing, verify the skill is active by asking your AI assistant:
 
 > "What development skill are you using?"
 
-It should respond mentioning leafhill_dev or leafhill.io development skill.
+It should respond mentioning leafhill-dev or leafhill.io development skill.
+
+For Claude Code specifically, you can also invoke it directly:
+
+> `/leafhill-dev`
+
+If the skill is properly registered, Claude Code will load and follow its instructions.
 
 You can also test specific behaviors:
 
@@ -269,7 +323,7 @@ When a new version of the skill is released:
 
 For Claude Code (project-level):
 ```
-cp /path/to/leafhill_dev/dist/claude/leafhill_dev/SKILL.md .claude/skills/leafhill_dev/SKILL.md
+cp /path/to/leafhill_dev/dist/claude/leafhill-dev/SKILL.md .claude/skills/leafhill-dev/SKILL.md
 ```
 
 For Cursor:
@@ -284,6 +338,8 @@ cp /path/to/leafhill_dev/dist/generic/leafhill_dev.md /your/tool/instructions/di
 
 **Step 2:** Your `leafhill.config.md` does not need to change unless new config options are added (check the release notes).
 
+**Step 3 (Claude Code):** Start a new session for the updated skill to be loaded.
+
 ---
 
 ## 9. Uninstalling
@@ -293,13 +349,13 @@ cp /path/to/leafhill_dev/dist/generic/leafhill_dev.md /your/tool/instructions/di
 Delete the skill directory:
 
 ```
-rm -r .claude/skills/leafhill_dev
+rm -r .claude/skills/leafhill-dev
 ```
 
 Or for global:
 
 ```
-rm -r ~/.claude/skills/leafhill_dev
+rm -r ~/.claude/skills/leafhill-dev
 ```
 
 ### Cursor
@@ -324,9 +380,15 @@ Optionally remove `leafhill.config.md` from your project root.
 
 ### The AI doesn't seem to follow the skill
 
-- **Claude Code:** Verify the file exists at `.claude/skills/leafhill_dev/SKILL.md` (or the global equivalent). The filename must be exactly `SKILL.md`.
+- **Claude Code:** Verify the file exists at `.claude/skills/leafhill-dev/SKILL.md` (or the global equivalent). The filename must be exactly `SKILL.md`. Also verify the file starts with valid YAML frontmatter containing `name: leafhill-dev` and a `description` field.
 - **Cursor:** Verify `.cursorrules` is in the project root. Try reloading the window.
 - **Generic:** Confirm your tool is actually reading the instruction file. Check its configuration.
+
+### Skill not appearing in Claude Code's skill list
+
+- The directory name must match the `name` field in the YAML frontmatter exactly.
+- The `name` field must use lowercase alphanumeric characters and hyphens only — no underscores, spaces, or uppercase.
+- Skills are discovered at session startup. If you added the skill during a session, start a new one.
 
 ### Config file is ignored
 
@@ -336,7 +398,7 @@ Optionally remove `leafhill.config.md` from your project root.
 
 ### Conflicts with existing rules
 
-- If you have other instruction files (e.g., an existing `.cursorrules`), merge them manually. The leafhill_dev rules are designed to be non-conflicting with common conventions.
+- If you have other instruction files (e.g., an existing `.cursorrules`), merge them manually. The leafhill-dev rules are designed to be non-conflicting with common conventions.
 - The priority system (Leafhill Dev > roam-code > superpowers > Common) resolves conflicts within the skill itself.
 
 ### roam-code or superpowers reminder keeps appearing
@@ -344,3 +406,10 @@ Optionally remove `leafhill.config.md` from your project root.
 - This is expected — both are enabled by default and the skill requires them. You have two options:
   1. **Install them** following their respective documentation.
   2. **Disable them** by adding `roam_code: off` and/or `superpowers: off` to your `leafhill.config.md`.
+
+### Migrating from leafhill_dev (underscores) to leafhill-dev (hyphens)
+
+If you installed an earlier version that used `leafhill_dev` as the directory name:
+
+1. Remove the old directory: `rm -r .claude/skills/leafhill_dev`
+2. Follow the installation steps above using the new `leafhill-dev` directory name.
