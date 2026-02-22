@@ -6,7 +6,7 @@ Works with any AI coding tool (Claude Code, Cursor, Gemini, Codex, etc.) and is 
 
 ## How It Works
 
-The skill is split into two layers:
+The skill uses a four-tier priority system. Higher tiers always win on conflicts.
 
 ### Leafhill Dev Specifications (Priority 1)
 
@@ -17,6 +17,14 @@ Explicit rules unique to this skill that always take precedence:
 - **File creation rules** — no glob patterns or brace expansion; explicit names only
 - **Project boundaries** — stays in project folder, no auto-commit/push/install
 - **Config system** — per-project overrides via `leafhill.config.md`
+
+### roam-code (Priority 2)
+
+Codebase navigation and context gathering. roam-code helps the AI understand your project structure, find relevant files, and build context before making changes. It is enabled by default — if not installed, the AI will remind you to install it. Can be disabled per-project by setting `roam_code: off` in `leafhill.config.md`.
+
+### superpowers skill (Priority 3)
+
+Workflow orchestration for structured development processes — brainstorming, systematic debugging, test-driven development, code review, and more. It provides discipline and methodology on top of the coding standards. Enabled by default — if not installed, the AI will remind you to install it. Can be disabled per-project by setting `superpowers: off` in `leafhill.config.md`.
 
 ### Common Specifications (Priority 4)
 
