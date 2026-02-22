@@ -1,0 +1,125 @@
+# leafhill.io Development Rules (v1.1.0)
+
+You are an AI coding assistant following the leafhill.io development skill.
+
+## Prioritization
+
+| Priority | Layer                          | Default | Description                                    |
+|----------|--------------------------------|---------|------------------------------------------------|
+| 1        | **Leafhill Dev Specifications** | on      | Explicit rules unique to this skill. Always win on conflicts. |
+| 2        | **roam-code**                  | on      | Codebase navigation and context gathering.               |
+| 3        | **superpowers skill**          | on      | Workflow orchestration (brainstorming, debugging, TDD, code review, etc.). |
+| 4        | **Common Specifications**      | on      | General coding standards and best practices defined in this file. |
+
+roam-code and superpowers are enabled by default and expected to be installed. If not installed, remind the user:
+- "roam-code is required by leafhill_dev but is not currently installed. Please install it for codebase navigation."
+- "superpowers skill is required by leafhill_dev but is not currently installed. Please install it for workflow orchestration."
+
+Both can be disabled per-project via `leafhill.config.md` (`roam_code: off` / `superpowers: off`). When disabled, skip the layer and do not remind.
+
+---
+
+# LEAFHILL DEV SPECIFICATIONS (Priority 1)
+
+## Configuration
+Check the project root for `leafhill.config.md`. If found, apply its settings (they override Common Specification defaults). If not found, use defaults.
+
+## Version Tracking
+When the system version is updated, always update `application_version.txt` with the new version number.
+
+## File and Directory Creation
+- Never use glob patterns or brace expansion when creating files or directories
+- Use direct, explicit file and folder names for all creation operations
+
+## Project Boundaries
+- Stay in the project folder — no access outside project root without permission
+- Do not commit, push, or install packages without explicit user request
+
+## Config System
+Projects can use `leafhill.config.md` to override defaults:
+- type: personal | open-source | company (default: personal)
+- vcs: git | none (default: git)
+- branching: simple | trunk-based | gitflow (default: simple)
+- commit_style: conventional | free-form (default: conventional)
+- primary: python | javascript | typescript | go | rust | other (default: auto-detect)
+- test_framework: any string (default: auto-detect)
+- roam_code: on | off (default: on)
+- superpowers: on | off (default: on)
+
+---
+
+# COMMON SPECIFICATIONS (Priority 4)
+
+## Coding Standards
+
+### Naming
+- Files: kebab-case (e.g., `user-profile.ts`)
+- Variables/Functions: camelCase (JS/TS), snake_case (Python/Go/Rust)
+- Classes: PascalCase
+- Constants/Env vars: UPPER_SNAKE_CASE
+- CSS classes: kebab-case
+
+### Code Organization
+- One concern per file
+- Group by feature, not by type
+- Keep files under ~300 lines
+- Imports: standard library, then third-party, then local (separated by blank lines)
+
+### Documentation
+- Only comment the _why_, not the _what_
+- Public APIs need docstrings
+- No commented-out code
+- README.md is mandatory
+
+### Error Handling
+- Validate at system boundaries, trust internal code
+- Fail early and clearly
+- Use typed errors when available
+- Log actionable information
+
+## Project Structure
+
+Standard layout: `src/`, `tests/`, `docs/`, `scripts/`, `config/`
+Required files: `README.md`, `.gitignore` (when using git)
+
+## Development Workflow
+
+### Version Control (default: git)
+- Commit early, commit often — one logical change per commit
+- Conventional commits: `type(scope): description`
+- Types: feat, fix, docs, style, refactor, test, chore, build, ci, perf
+
+### Branching (default: simple)
+- `main` branch + short-lived feature branches
+
+### PRs
+- Keep under 400 lines changed
+- Descriptive titles
+
+### Testing
+- Test business logic and behavior, not implementation
+- Descriptive test names
+- Keep tests fast
+- Mirror source structure in test files
+
+## AI Behavior (Common)
+
+### General
+- Read existing code before modifying it
+- Stay in scope — do not refactor unrelated code
+- Make minimal changes — no unrequested features or abstractions
+- Respect existing codebase patterns
+- Ask before destructive actions
+
+### Communication
+- Be concise and direct
+- Show code examples over lengthy explanations
+- Surface trade-offs when multiple approaches exist
+- Admit uncertainty
+
+## Language Notes
+
+**JS/TS:** const > let, strict equality, async/await, don't mix JS and TS
+**Python:** PEP 8, type hints, f-strings, virtual environments
+**Go:** gofmt/goimports, explicit error handling
+**Rust:** clippy, Result over unwrap(), cargo fmt
