@@ -1,0 +1,63 @@
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor and IDE files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# AI coding tool local files
+.claude/
+.cursor/
+.aider*
+.copilot/
+.codeium/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# Node / JavaScript
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+*.tgz
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+*.whl
+
+# Build artifacts
+*.o
+*.so
+*.dylib
+*.exe
+*.out
+build/
+target/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+tmp/
+temp/

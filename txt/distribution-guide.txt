@@ -1,0 +1,219 @@
+leafhill.io Development Skill — Distribution & Setup Guide
+============================================================
+
+Version: 1.1.0
+
+
+SKILL STRUCTURE
+---------------
+
+The skill is organized into two layers with a four-tier priority system:
+
+    Priority 1: Leafhill Dev Specifications
+                Explicit rules unique to this skill. Always win on conflicts.
+                - Configuration detection (leafhill.config.md)
+                - Version tracking (application_version.txt)
+                - File creation rules (no glob patterns, explicit names only)
+                - Project boundaries (stay in folder, no auto-commit/push/install)
+                - Config system (per-project overrides)
+
+    Priority 2: roam-code (default: on)
+                Codebase navigation and context gathering.
+                Enabled by default. If not installed, the skill reminds the
+                user to install it. Can be disabled with roam_code: off
+                in leafhill.config.md.
+
+    Priority 3: superpowers skill (default: on)
+                Workflow orchestration (brainstorming, debugging, TDD, etc.).
+                Enabled by default. If not installed, the skill reminds the
+                user to install it. Can be disabled with superpowers: off
+                in leafhill.config.md.
+
+    Priority 4: Common Specifications
+                General coding standards and best practices.
+                - Naming conventions, code organization
+                - Documentation and error handling
+                - Version control, branching, commits
+                - Testing approach
+                - AI behavior and communication style
+                - Language-specific notes (JS/TS, Python, Go, Rust)
+
+Higher-priority layers override lower ones when instructions conflict.
+
+
+1. CLAUDE CODE
+--------------
+
+Claude Code loads skills from a skills directory. You can install
+the skill at the project level or globally.
+
+Project-level (recommended):
+
+    1. In your project root, create the skills directory:
+       mkdir .claude
+       mkdir .claude/skills
+       mkdir .claude/skills/leafhill_dev
+
+    2. Copy the skill file:
+       cp dist/claude/leafhill_dev/SKILL.md .claude/skills/leafhill_dev/SKILL.md
+
+    3. (Optional) Add the config to your project root:
+       cp dist/config/leafhill.config.template.md leafhill.config.md
+
+    4. Edit leafhill.config.md to match your project settings.
+
+Global (applies to all projects):
+
+    1. Create the global skills directory:
+       mkdir ~/.claude
+       mkdir ~/.claude/skills
+       mkdir ~/.claude/skills/leafhill_dev
+
+    2. Copy the skill file:
+       cp dist/claude/leafhill_dev/SKILL.md ~/.claude/skills/leafhill_dev/SKILL.md
+
+Notes:
+    - Project-level skills override global skills of the same name.
+    - Claude Code detects new skill files automatically.
+    - The file must be named SKILL.md inside a directory matching the alias.
+
+
+2. CURSOR
+---------
+
+Cursor reads a .cursorrules file from your project root.
+
+    1. Copy the rules file into your project root:
+       cp dist/cursor/.cursorrules .cursorrules
+
+    2. (Optional) Add the config:
+       cp dist/config/leafhill.config.template.md leafhill.config.md
+
+    3. Edit leafhill.config.md to match your project settings.
+
+    4. Restart Cursor or reload the window (Cmd/Ctrl+Shift+P > Reload).
+
+Notes:
+    - Only one .cursorrules file per project. If you have an existing one,
+      merge the contents manually.
+    - Cursor reads the file on window load; changes require a reload.
+
+
+3. GEMINI / CODEX / OTHER TOOLS
+-------------------------------
+
+For tools that accept custom instructions as a markdown file:
+
+    1. Copy the generic skill file:
+       cp dist/generic/leafhill_dev.md <your-tool-instruction-directory>/
+
+    2. Follow your tool's documentation for loading custom instruction
+       files. Common approaches:
+
+       Tool       How to load
+       ----       -----------
+       Gemini     Paste into system instructions or upload as context
+       Codex      Place in instructions directory or reference in config
+       Aider      Add to .aider.conf.yml under read: or use --read flag
+       Windsurf   Add to .windsurfrules or project instructions
+       Other      Check tool docs for system prompt / custom instructions
+
+    3. (Optional) Add the config to your project root:
+       cp dist/config/leafhill.config.template.md leafhill.config.md
+
+
+4. CONFIGURATION
+----------------
+
+The leafhill_dev skill checks for a leafhill.config.md file in the
+project root. This file lets you customize behavior per project.
+Config values override Common Specification defaults (Priority 4).
+They do not override Leafhill Dev Specifications (Priority 1).
+
+To create one:
+
+    1. Copy the template:
+       cp dist/config/leafhill.config.template.md leafhill.config.md
+
+    2. Edit the values. Available settings:
+
+       type           personal | open-source | company     (default: personal)
+       vcs            git | none                           (default: git)
+       branching      simple | trunk-based | gitflow       (default: simple)
+       commit_style   conventional | free-form             (default: conventional)
+       primary        python | javascript | typescript |   (default: auto-detect)
+                      go | rust | other
+       test_framework (any string, e.g., pytest, jest)     (default: auto-detect)
+       roam_code      on | off                              (default: on)
+       superpowers    on | off                              (default: on)
+
+    3. Any setting left blank or removed uses the default.
+
+    4. You can add project-specific rules in the "Additional Rules"
+       section at the bottom of the config file.
+
+See examples/leafhill.config.example.md for a filled-out example.
+
+
+5. COMPANION TOOLS
+------------------
+
+roam-code and superpowers are enabled by default and expected to be
+installed. If either is missing, the AI will remind the user to
+install it on every session.
+
+roam-code (Priority 2):
+    Provides codebase navigation and context gathering.
+    Install following roam-code's own documentation.
+    Disable per-project: set roam_code: off in leafhill.config.md
+
+superpowers skill (Priority 3):
+    Provides workflow orchestration — brainstorming, debugging, TDD,
+    code review, and more.
+    Install following superpowers documentation.
+    Disable per-project: set superpowers: off in leafhill.config.md
+
+When disabled, the skill skips that layer entirely and does not
+remind the user.
+
+
+6. UPDATING
+-----------
+
+When a new version of the skill is released:
+
+    1. Replace the skill file in your installation location with the
+       new version from dist/.
+
+    2. Your leafhill.config.md does not need to change unless new
+       config options are added (check the release notes).
+
+
+7. UNINSTALLING
+---------------
+
+Claude Code:   rm -r .claude/skills/leafhill_dev
+               (or rm -r ~/.claude/skills/leafhill_dev for global)
+
+Cursor:        rm .cursorrules
+
+Generic:       Remove leafhill_dev.md from your tool's instruction directory.
+
+Config:        Optionally remove leafhill.config.md from the project root.
+
+
+8. FILE REFERENCE
+-----------------
+
+Source files:
+    SKILL.md                             Main skill (source of truth)
+    README.md                            Human-readable overview
+    INSTALL.md                           Full installation guide
+    leafhill.config.template.md          Config template
+    examples/leafhill.config.example.md  Example config
+
+Distribution files:
+    dist/claude/leafhill_dev/SKILL.md         For Claude Code
+    dist/cursor/.cursorrules                  For Cursor
+    dist/generic/leafhill_dev.md              For Gemini, Codex, other tools
+    dist/config/leafhill.config.template.md   Config template copy
