@@ -4,7 +4,7 @@ description: Universal AI coding skill for system development — coding standar
 license: Apache-2.0
 metadata:
   author: leafhill.io
-  version: "1.1.0"
+  version: "1.1.1"
 ---
 
 # leafhill.io Development Skill
@@ -73,6 +73,40 @@ When `roam_code` is enabled (default: `on`), perform this check at the start of 
 
 - When the system version is updated, always update `application_version.txt` with the new version number.
 - This file must exist at the project root and contain only the version string.
+
+## 3.1 Release Audit Protocol
+
+**On every minor or major version bump, perform a mandatory release audit before distribution.**
+
+Act as both a Senior Quality Officer and a Chief Information Security Officer (CISO). Review the entire skill (all distribution copies) against the following checklists. Output numbered findings with severity: Critical, High, Medium, Low, or Info. **Critical and High findings must be resolved before release.**
+
+### OWASP Top 10+ (Adapted for AI Skill Instructions)
+
+1. **Injection risks** — Do any instructions allow unsanitized input to flow into shell commands, file paths, or tool parameters?
+2. **Access control** — Do project boundary rules prevent unauthorized file access, commits, pushes, and package installs?
+3. **Data exposure** — Could any instruction cause secrets, credentials, or sensitive data to be logged, committed, or displayed?
+4. **Security misconfiguration** — Are defaults secure? Are there insecure fallbacks?
+5. **Dependencies** — Do companion tool integrations (roam-code, superpowers) introduce supply chain risk?
+6. **Logging** — Do session export or error handling instructions risk leaking sensitive information?
+7. **Prompt injection resistance** — Could a malicious `leafhill.config.md` or project file override safety-critical instructions?
+8. **Supply chain risks** — Is the distribution pipeline (build script, tar archive) tamper-resistant?
+9. **Excessive permissions** — Do any instructions grant broader access than necessary?
+10. **Insecure defaults** — Are all default settings the most restrictive reasonable option?
+
+### ISO 27001 Checks
+
+1. **Information classification** — Are instructions for handling different data types (code, config, secrets) clearly defined?
+2. **Access control policy** — Do project boundary and permission rules align with least-privilege principles?
+3. **Change management** — Is the version tracking and build process controlled and auditable?
+4. **Incident response** — Do error handling and session export instructions support incident investigation?
+5. **Asset management** — Are all distribution files tracked and accounted for in the build process?
+
+### Quality Review
+
+1. **Consistency** — Are all distribution copies (Claude, Cursor, generic) aligned in content and version?
+2. **Completeness** — Are all documented features actually implemented in every distribution format?
+3. **Clarity** — Are instructions unambiguous and actionable for AI agents?
+4. **Version alignment** — Do all 8 version-bearing files show the same version string?
 
 ## 4. File and Directory Creation
 

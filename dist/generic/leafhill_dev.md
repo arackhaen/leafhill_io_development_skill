@@ -1,6 +1,6 @@
 # leafhill.io Development Skill
 
-**Version:** 1.1.0
+**Version:** 1.1.1
 **Author:** leafhill.io
 
 You are an AI coding assistant following the leafhill.io development skill. This document defines your coding standards, project structure conventions, and collaboration rules.
@@ -44,24 +44,51 @@ Before starting any work, check the project root for a file named `leafhill.conf
 
 The config file uses simple `key: value` pairs inside markdown sections. See the template for the full schema.
 
-## 2. Version Tracking
+## 2. roam-code Initialization
+
+When `roam_code` is enabled (default: `on`), perform this check at the start of every session:
+
+1. **Verify roam-code is installed.** Run `roam --version`.
+   - If the command is not found, remind the user:
+     _"roam-code is required by leafhill-dev but is not currently installed. Please install it for codebase navigation."_
+   - Stop here. Do not proceed with steps 2–4.
+
+2. **Check if CLAUDE.md exists.** Look for `CLAUDE.md` in the project root.
+   - If it exists, run `roam describe` and check whether the first non-empty line of its output already appears in CLAUDE.md.
+     - If found, the description is already present. Stop here.
+   - If it does not exist, proceed to step 3.
+
+3. **Prompt the user.**
+   _"roam-code is installed. Would you like me to run `roam describe` and add the codebase description to your CLAUDE.md?"_
+   - If the user declines, stop here.
+
+4. **Run and inject.**
+   - Run `roam describe` and capture the output.
+   - If CLAUDE.md exists, prepend the output to the beginning of the file, followed by a blank line, then the existing content.
+   - If CLAUDE.md does not exist, create it with the roam describe output as the full content.
+
+## 3. Version Tracking
 
 - When the system version is updated, always update `application_version.txt` with the new version number.
 - This file must exist at the project root and contain only the version string.
 
-## 3. File and Directory Creation
+## 3.1 Release Audit Protocol
+
+On every minor or major version bump, perform a mandatory release audit before distribution. Act as Senior Quality Officer and CISO. Review all distribution copies against: OWASP Top 10+ adapted for AI skill instructions (injection risks, access control, data exposure, security misconfiguration, dependencies, logging, prompt injection resistance, supply chain risks, excessive permissions, insecure defaults), ISO 27001 checks (information classification, access control policy, change management, incident response, asset management), and quality review (consistency across dist copies, completeness, clarity, version alignment). Output numbered findings with severity (Critical/High/Medium/Low/Info). Critical and High must be resolved before release.
+
+## 4. File and Directory Creation
 
 - **Never use glob patterns or brace expansion** (e.g., `{a,b,c}`, `**/*.ts`) when creating files or directories.
 - **Use direct, explicit names** for every file and folder creation operation. Create each file and directory individually by its full name.
 
-## 4. Project Boundaries
+## 5. Project Boundaries
 
 - **Stay in the project folder.** Do not access files outside the project root without explicit permission from the user.
 - **Do not commit automatically.** Only create commits when the user asks.
 - **Do not push automatically.** Only push to remote when the user explicitly requests it.
 - **Do not install packages without asking.** Confirm before adding new dependencies.
 
-## 5. Leafhill Config System
+## 6. Leafhill Config System
 
 Projects using this skill can place a `leafhill.config.md` in the project root to override Common Specification defaults. The config supports these keys:
 
@@ -78,7 +105,7 @@ Projects using this skill can place a `leafhill.config.md` in the project root t
 
 Config values override the corresponding defaults. Any key left blank or removed falls back to the default.
 
-## 6. Session Exit Protocol
+## 7. Session Exit Protocol
 
 **Before ending a Claude Code session, always export and save work to file.**
 
