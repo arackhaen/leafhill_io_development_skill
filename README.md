@@ -13,6 +13,7 @@ The skill uses a four-tier priority system. Higher tiers always win on conflicts
 Explicit rules unique to this skill that always take precedence:
 
 - **Configuration detection** — reads `leafhill.config.md` from your project root
+- **roam-code initialization** — auto-detects roam-code, runs `roam describe`, and injects the codebase description into CLAUDE.md
 - **Version tracking** — keeps `application_version.txt` in sync
 - **File creation rules** — no glob patterns or brace expansion; explicit names only
 - **Project boundaries** — stays in project folder, no auto-commit/push/install
@@ -20,7 +21,7 @@ Explicit rules unique to this skill that always take precedence:
 
 ### roam-code (Priority 2)
 
-Codebase navigation and context gathering. roam-code helps the AI understand your project structure, find relevant files, and build context before making changes. It is enabled by default — if not installed, the AI will remind you to install it. Can be disabled per-project by setting `roam_code: off` in `leafhill.config.md`.
+Codebase navigation and context gathering. roam-code helps the AI understand your project structure, find relevant files, and build context before making changes. When installed, the skill automatically offers to run `roam describe` and add the codebase description to your project's CLAUDE.md at the start of each session. It is enabled by default — if not installed, the AI will remind you to install it. Install via `pip install roam-code` (or `pipx install roam-code`). Can be disabled per-project by setting `roam_code: off` in `leafhill.config.md`.
 
 ### superpowers skill (Priority 3)
 
@@ -57,8 +58,8 @@ See [INSTALL.md](INSTALL.md) for complete setup instructions for all platforms.
 ```
 mkdir .claude
 mkdir .claude/skills
-mkdir .claude/skills/leafhill_dev
-cp dist/claude/leafhill_dev/SKILL.md .claude/skills/leafhill_dev/SKILL.md
+mkdir .claude/skills/leafhill-dev
+cp dist/claude/leafhill-dev/SKILL.md .claude/skills/leafhill-dev/SKILL.md
 ```
 
 ## Configuration
@@ -103,7 +104,7 @@ leafhill_dev/
 
 ## Version
 
-Current version: **1.1.0**
+Current version: **1.1.1**
 
 ## License
 
