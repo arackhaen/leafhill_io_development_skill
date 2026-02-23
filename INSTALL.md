@@ -9,29 +9,70 @@ This skill follows the [Agent Skills](https://agentskills.io) open standard, whi
 ## Table of Contents
 
 1. [Prerequisites](#1-prerequisites)
-2. [Claude Code](#2-claude-code)
-3. [Cursor](#3-cursor)
-4. [Gemini, Codex, and Other Tools](#4-gemini-codex-and-other-tools)
-5. [Per-Project Configuration](#5-per-project-configuration)
-6. [Required Companion Tools](#6-required-companion-tools)
-7. [Verifying the Installation](#7-verifying-the-installation)
-8. [Updating](#8-updating)
-9. [Uninstalling](#9-uninstalling)
-10. [Troubleshooting](#10-troubleshooting)
+2. [Quick Install (install.sh)](#2-quick-install-installsh)
+3. [Claude Code (Manual)](#3-claude-code-manual)
+4. [Cursor (Manual)](#4-cursor-manual)
+5. [Gemini, Codex, and Other Tools (Manual)](#5-gemini-codex-and-other-tools-manual)
+6. [Per-Project Configuration](#6-per-project-configuration)
+7. [Required Companion Tools](#7-required-companion-tools)
+8. [Verifying the Installation](#8-verifying-the-installation)
+9. [Updating](#9-updating)
+10. [Uninstalling](#10-uninstalling)
+11. [Troubleshooting](#11-troubleshooting)
 
 ---
 
 ## 1. Prerequisites
 
-- Access to the `leafhill_dev/dist/` directory (this repository).
+- Access to the `leafhill_dev/dist/` directory (this repository), or the `leafhill-dev.tar.gz` archive.
 - A supported AI coding tool installed and working.
-- A terminal to run copy commands.
+- A terminal to run commands.
 
 No package manager, build step, or runtime is required. The skill consists entirely of instruction files that your AI tool reads.
 
 ---
 
-## 2. Claude Code
+## 2. Quick Install (install.sh)
+
+The fastest way to install. The `install.sh` script is included in the `dist/` directory and bundled inside the `leafhill-dev.tar.gz` archive.
+
+### From the tar archive
+
+```
+tar xzf leafhill-dev.tar.gz
+cd /path/to/your/project
+/path/to/extracted/install.sh claude
+```
+
+This installs the skill to `.claude/skills/leafhill-dev/` in your current project and copies `leafhill.config.md` if it doesn't already exist.
+
+### From the dist/ directory
+
+```
+cd /path/to/your/project
+/path/to/leafhill_dev/dist/install.sh claude
+```
+
+### Available targets
+
+| Command | What it does |
+|---------|-------------|
+| `./install.sh claude` | Install to current project (`.claude/skills/leafhill-dev/`) + config template |
+| `./install.sh claude-global` | Install globally (`~/.claude/skills/leafhill-dev/`) |
+| `./install.sh cursor` | Copy `.cursorrules` to current project + config template |
+| `./install.sh generic <dir>` | Copy `leafhill_dev.md` to the specified directory + config template |
+
+Run `./install.sh` with no arguments to see usage help.
+
+### Notes
+
+- The `claude` and `cursor` targets must be run from your project root directory.
+- The `cursor` target will prompt before overwriting an existing `.cursorrules` file.
+- The `generic` target requires running from the `dist/` directory (not the extracted tar), since the tar only bundles the Claude Code skill file.
+
+---
+
+## 3. Claude Code (Manual)
 
 Claude Code auto-discovers skills from a `skills/` directory. Each skill is a directory containing a `SKILL.md` file with YAML frontmatter. You can install at the project level (recommended) or globally.
 
@@ -133,7 +174,7 @@ Current branch: !`git branch --show-current`
 
 ---
 
-## 3. Cursor
+## 4. Cursor (Manual)
 
 Cursor reads a `.cursorrules` file from the project root.
 
@@ -165,7 +206,7 @@ cp /path/to/leafhill_dev/dist/config/leafhill.config.template.md leafhill.config
 
 ---
 
-## 4. Gemini, Codex, and Other Tools
+## 5. Gemini, Codex, and Other Tools (Manual)
 
 For any AI tool that accepts custom instructions as a markdown or text file:
 
@@ -201,7 +242,7 @@ This skill follows the [Agent Skills](https://agentskills.io) open standard. Any
 
 ---
 
-## 5. Per-Project Configuration
+## 6. Per-Project Configuration
 
 The skill checks for `leafhill.config.md` in the project root on every session. This file lets you override default behavior.
 
@@ -258,7 +299,7 @@ You can add free-form project-specific rules at the bottom of `leafhill.config.m
 
 ---
 
-## 6. Required Companion Tools
+## 7. Required Companion Tools
 
 roam-code and superpowers are **enabled by default** and the skill expects them to be installed. If either is missing, the AI will remind you to install it on every session.
 
@@ -293,7 +334,7 @@ When disabled, the skill skips that layer entirely and does not remind you to in
 
 ---
 
-## 7. Verifying the Installation
+## 8. Verifying the Installation
 
 After installing, verify the skill is active by asking your AI assistant:
 
@@ -315,7 +356,7 @@ You can also test specific behaviors:
 
 ---
 
-## 8. Updating
+## 9. Updating
 
 When a new version of the skill is released:
 
@@ -342,7 +383,7 @@ cp /path/to/leafhill_dev/dist/generic/leafhill_dev.md /your/tool/instructions/di
 
 ---
 
-## 9. Uninstalling
+## 10. Uninstalling
 
 ### Claude Code
 
@@ -376,7 +417,7 @@ Optionally remove `leafhill.config.md` from your project root.
 
 ---
 
-## 10. Troubleshooting
+## 11. Troubleshooting
 
 ### The AI doesn't seem to follow the skill
 
