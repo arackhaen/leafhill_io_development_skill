@@ -1,7 +1,7 @@
 leafhill.io Development Skill — Distribution & Setup Guide
 ============================================================
 
-Version: 1.1.1
+Version: 1.2.0
 
 
 SKILL STRUCTURE
@@ -17,19 +17,26 @@ The skill is organized into two layers with a four-tier priority system:
                 - Project boundaries (stay in folder, no auto-commit/push/install)
                 - Config system (per-project overrides)
 
-    Priority 2: roam-code (default: on)
-                Codebase navigation and context gathering.
-                Enabled by default. If not installed, the skill reminds the
-                user to install it. Can be disabled with roam_code: off
-                in leafhill.config.md.
+    Priority 2.1: roam-code (default: on)
+                  Codebase navigation and context gathering.
+                  Enabled by default. If not installed, the skill reminds the
+                  user to install it. Can be disabled with roam_code: off
+                  in leafhill.config.md.
 
-    Priority 3: superpowers skill (default: on)
-                Workflow orchestration (brainstorming, debugging, TDD, etc.).
-                Enabled by default. If not installed, the skill reminds the
-                user to install it. Can be disabled with superpowers: off
-                in leafhill.config.md.
+    Priority 2.2: persistent-memory (default: on)
+                  Cross-session task tracking and project memory via the
+                  leafhill-persistent-memory MCP server. Enabled by default.
+                  If not available, the skill reminds the user to install it.
+                  Can be disabled with persistent_memory: off in
+                  leafhill.config.md.
 
-    Priority 4: Common Specifications
+    Priority 2.3: superpowers skill (default: on)
+                  Workflow orchestration (brainstorming, debugging, TDD, etc.).
+                  Enabled by default. If not installed, the skill reminds the
+                  user to install it. Can be disabled with superpowers: off
+                  in leafhill.config.md.
+
+    Priority 3: Common Specifications
                 General coding standards and best practices.
                 - Naming conventions, code organization
                 - Documentation and error handling
@@ -52,10 +59,10 @@ Project-level (recommended):
     1. In your project root, create the skills directory:
        mkdir .claude
        mkdir .claude/skills
-       mkdir .claude/skills/leafhill_dev
+       mkdir .claude/skills/leafhill-dev
 
     2. Copy the skill file:
-       cp dist/claude/leafhill_dev/SKILL.md .claude/skills/leafhill_dev/SKILL.md
+       cp dist/claude/leafhill-dev/SKILL.md .claude/skills/leafhill-dev/SKILL.md
 
     3. (Optional) Add the config to your project root:
        cp dist/config/leafhill.config.template.md leafhill.config.md
@@ -67,10 +74,10 @@ Global (applies to all projects):
     1. Create the global skills directory:
        mkdir ~/.claude
        mkdir ~/.claude/skills
-       mkdir ~/.claude/skills/leafhill_dev
+       mkdir ~/.claude/skills/leafhill-dev
 
     2. Copy the skill file:
-       cp dist/claude/leafhill_dev/SKILL.md ~/.claude/skills/leafhill_dev/SKILL.md
+       cp dist/claude/leafhill-dev/SKILL.md ~/.claude/skills/leafhill-dev/SKILL.md
 
 Notes:
     - Project-level skills override global skills of the same name.
@@ -127,7 +134,7 @@ For tools that accept custom instructions as a markdown file:
 
 The leafhill_dev skill checks for a leafhill.config.md file in the
 project root. This file lets you customize behavior per project.
-Config values override Common Specification defaults (Priority 4).
+Config values override Common Specification defaults (Priority 3).
 They do not override Leafhill Dev Specifications (Priority 1).
 
 To create one:
@@ -144,8 +151,9 @@ To create one:
        primary        python | javascript | typescript |   (default: auto-detect)
                       go | rust | other
        test_framework (any string, e.g., pytest, jest)     (default: auto-detect)
-       roam_code      on | off                              (default: on)
-       superpowers    on | off                              (default: on)
+       roam_code         on | off                           (default: on)
+       superpowers       on | off                           (default: on)
+       persistent_memory on | off                           (default: on)
 
     3. Any setting left blank or removed uses the default.
 
@@ -158,16 +166,22 @@ See examples/leafhill.config.example.md for a filled-out example.
 5. COMPANION TOOLS
 ------------------
 
-roam-code and superpowers are enabled by default and expected to be
-installed. If either is missing, the AI will remind the user to
-install it on every session.
+roam-code, persistent-memory, and superpowers are enabled by default
+and expected to be installed. If any is missing, the AI will remind
+the user to install it on every session.
 
-roam-code (Priority 2):
+roam-code (Priority 2.1):
     Provides codebase navigation and context gathering.
     Install following roam-code's own documentation.
     Disable per-project: set roam_code: off in leafhill.config.md
 
-superpowers skill (Priority 3):
+persistent-memory (Priority 2.2):
+    Provides cross-session task tracking and project memory via the
+    leafhill-persistent-memory MCP server.
+    Install following its documentation and configure as an MCP server.
+    Disable per-project: set persistent_memory: off in leafhill.config.md
+
+superpowers skill (Priority 2.3):
     Provides workflow orchestration — brainstorming, debugging, TDD,
     code review, and more.
     Install following superpowers documentation.
@@ -192,8 +206,8 @@ When a new version of the skill is released:
 7. UNINSTALLING
 ---------------
 
-Claude Code:   rm -r .claude/skills/leafhill_dev
-               (or rm -r ~/.claude/skills/leafhill_dev for global)
+Claude Code:   rm -r .claude/skills/leafhill-dev
+               (or rm -r ~/.claude/skills/leafhill-dev for global)
 
 Cursor:        rm .cursorrules
 
@@ -213,7 +227,7 @@ Source files:
     examples/leafhill.config.example.md  Example config
 
 Distribution files:
-    dist/claude/leafhill_dev/SKILL.md         For Claude Code
+    dist/claude/leafhill-dev/SKILL.md         For Claude Code
     dist/cursor/.cursorrules                  For Cursor
     dist/generic/leafhill_dev.md              For Gemini, Codex, other tools
     dist/config/leafhill.config.template.md   Config template copy
