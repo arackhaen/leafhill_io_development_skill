@@ -9,7 +9,7 @@ This skill follows the [Agent Skills](https://agentskills.io) open standard, whi
 ## Table of Contents
 
 1. [Prerequisites](#1-prerequisites)
-2. [Quick Install (install.sh)](#2-quick-install-installsh)
+2. [Quick Install (install-leafhill-dev-skill.sh)](#2-quick-install-installsh)
 3. [Claude Code (Manual)](#3-claude-code-manual)
 4. [Cursor (Manual)](#4-cursor-manual)
 5. [Gemini, Codex, and Other Tools (Manual)](#5-gemini-codex-and-other-tools-manual)
@@ -32,16 +32,16 @@ No package manager, build step, or runtime is required. The skill consists entir
 
 ---
 
-## 2. Quick Install (install.sh)
+## 2. Quick Install (install-leafhill-dev-skill.sh)
 
-The fastest way to install. The `install.sh` script is included in the `dist/` directory and bundled inside the `leafhill-dev.tar.gz` archive.
+The fastest way to install. The `install-leafhill-dev-skill.sh` script is included in the `dist/` directory and bundled inside the `leafhill-dev.tar.gz` archive.
 
 ### From the tar archive
 
 ```
 tar xzf leafhill-dev.tar.gz
 cd /path/to/your/project
-/path/to/extracted/install.sh claude
+/path/to/extracted/install-leafhill-dev-skill.sh claude
 ```
 
 This installs the skill to `.claude/skills/leafhill-dev/` in your current project and copies `leafhill.config.md` if it doesn't already exist.
@@ -50,25 +50,26 @@ This installs the skill to `.claude/skills/leafhill-dev/` in your current projec
 
 ```
 cd /path/to/your/project
-/path/to/leafhill_dev/dist/install.sh claude
+/path/to/leafhill_dev/dist/install-leafhill-dev-skill.sh claude
 ```
 
 ### Available targets
 
 | Command | What it does |
 |---------|-------------|
-| `./install.sh claude` | Install to current project (`.claude/skills/leafhill-dev/`) + config template |
-| `./install.sh claude-global` | Install globally (`~/.claude/skills/leafhill-dev/`) |
-| `./install.sh cursor` | Copy `.cursorrules` to current project + config template |
-| `./install.sh generic <dir>` | Copy `leafhill_dev.md` to the specified directory + config template |
+| `./install-leafhill-dev-skill.sh claude` | Install to current project (`.claude/skills/leafhill-dev/`) + config template |
+| `./install-leafhill-dev-skill.sh claude-global` | Install globally (`~/.claude/skills/leafhill-dev/`) |
+| `./install-leafhill-dev-skill.sh cursor` | Copy `.cursorrules` to current project + config template |
+| `./install-leafhill-dev-skill.sh generic <dir>` | Copy `leafhill_dev.md` to the specified directory + config template |
 
-Run `./install.sh` with no arguments to see usage help.
+Run `./install-leafhill-dev-skill.sh` with no arguments to see usage help.
 
 ### Notes
 
 - The `claude` and `cursor` targets must be run from your project root directory.
 - The `cursor` target will prompt before overwriting an existing `.cursorrules` file.
 - The `generic` target requires running from the `dist/` directory (not the extracted tar), since the tar only bundles the Claude Code skill file.
+- The tar archive extracts the config template as `leafhill.config.md-X.Y.Z` (versioned) to avoid overwriting an existing `leafhill.config.md`. The installer copies it to `leafhill.config.md` if one does not already exist.
 
 ---
 
@@ -87,7 +88,7 @@ description: Universal AI coding skill for system development — coding standar
 license: Apache-2.0
 metadata:
   author: leafhill.io
-  version: "1.2.0"
+  version: "1.2.2"
 ---
 ```
 

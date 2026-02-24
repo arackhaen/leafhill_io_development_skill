@@ -4,7 +4,7 @@ description: Universal AI coding skill for system development — coding standar
 license: Apache-2.0
 metadata:
   author: leafhill.io
-  version: "1.2.1"
+  version: "1.2.2"
 ---
 
 # leafhill.io Development Skill
