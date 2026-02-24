@@ -1,6 +1,6 @@
 # leafhill.io Development Skill
 
-**Version:** 1.2.2
+**Version:** 1.2.3
 **Author:** leafhill.io
 
 You are an AI coding assistant following the leafhill.io development skill. This document defines your coding standards, project structure conventions, and collaboration rules.
@@ -78,11 +78,20 @@ When `roam_code` is enabled (default: `on`), perform this check at the start of 
 
 On every minor or major version bump, perform a mandatory release audit before distribution. Act as Senior Quality Officer and CISO. Review all distribution copies against: OWASP Top 10+ adapted for AI skill instructions (injection risks, access control, data exposure, security misconfiguration, dependencies, logging, prompt injection resistance, supply chain risks, excessive permissions, insecure defaults), ISO 27001 checks (information classification, access control policy, change management, incident response, asset management), and quality review (consistency across dist copies, completeness, clarity, version alignment). Output numbered findings with severity (Critical/High/Medium/Low/Info). Critical and High must be resolved before release.
 
-Write all findings to the audit output files defined in Section 3.2.
+Write all findings to the audit output files defined in Section 3.3.
 
-## 3.2 Audit Output Files
+## 3.2 DATOR Variable
 
-Write audit findings to two files in the project root: `INFORMATIONSECURITY_AUDIT.md` (OWASP + ISO 27001 findings) and `QUALITY_AUDIT.md` (Quality Review findings). Each entry has a header (`## Audit — vX.Y.Z — YYYY-MM-DD`), numbered findings with severity, a summary table, and a verdict (PASS/FAIL). New audits are prepended above existing content — old entries are never removed. If the file exists, read and prepend; if not, create it.
+**DATOR** is the standard datetime format for all timestamps.
+
+- **Format:** `%Y%m%d%H%M%S` (e.g., `20260224140244`)
+- **Date-only variant:** `%Y%m%d` (e.g., `20260224`) — used only for audit headers.
+
+Use DATOR for all file names, session IDs, and timestamps. Do not use other date formats.
+
+## 3.3 Audit Output Files
+
+Write audit findings to two files in the project root: `INFORMATIONSECURITY_AUDIT.md` (OWASP + ISO 27001 findings) and `QUALITY_AUDIT.md` (Quality Review findings). Each entry has a header (`## Audit — vX.Y.Z — DATOR` using date-only variant), numbered findings with severity, a summary table, and a verdict (PASS/FAIL). New audits are prepended above existing content — old entries are never removed. If the file exists, read and prepend; if not, create it.
 
 ## 4. File and Directory Creation
 
@@ -120,7 +129,7 @@ Config values override the corresponding defaults. Any key left blank or removed
 
 This is mandatory. Before the session ends:
 
-1. **Export a session summary** to a timestamped file in the project root: `YYYY-MM-DD-HHMMSS-session-description.txt`
+1. **Export a session summary** to a timestamped file in the project root: `DATOR-session-description.txt`
 2. The export must include:
    - What was worked on (tasks completed, files changed)
    - Current state (what's done, what's in progress, what's pending)
@@ -177,7 +186,7 @@ Use persistent tasks to track work across sessions. Follow these rules:
 When persistent memory is enabled, the Session Exit Protocol (Section 7) gains additional steps:
 
 1. **Log the session summary** to persistent memory using `log_conversation` with:
-   - `session_id`: a stable identifier (use the format `project-name/YYYY-MM-DD-HHMMSS`)
+   - `session_id`: a stable identifier (use the format `project-name/DATOR`)
    - `role`: `assistant`
    - `entry_type`: `summary`
    - `project`: the project name

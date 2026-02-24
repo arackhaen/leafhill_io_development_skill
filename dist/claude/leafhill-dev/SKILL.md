@@ -4,7 +4,7 @@ description: Universal AI coding skill for system development — coding standar
 license: Apache-2.0
 metadata:
   author: leafhill.io
-  version: "1.2.2"
+  version: "1.2.3"
 ---
 
 # leafhill.io Development Skill
@@ -110,9 +110,18 @@ Act as both a Senior Quality Officer and a Chief Information Security Officer (C
 3. **Clarity** — Are instructions unambiguous and actionable for AI agents?
 4. **Version alignment** — Do all 8 version-bearing files show the same version string?
 
-Write all findings to the audit output files defined in Section 3.2.
+Write all findings to the audit output files defined in Section 3.3.
 
-## 3.2 Audit Output Files
+## 3.2 DATOR Variable
+
+**DATOR** is the standard datetime format for all timestamps.
+
+- **Format:** `%Y%m%d%H%M%S` (e.g., `20260224140244`)
+- **Date-only variant:** `%Y%m%d` (e.g., `20260224`) — used only for audit headers.
+
+Use DATOR for all file names, session IDs, and timestamps. Do not use other date formats.
+
+## 3.3 Audit Output Files
 
 All audit findings from Section 3.1 must be persisted to audit output files in the project root.
 
@@ -127,7 +136,7 @@ All audit findings from Section 3.1 must be persisted to audit output files in t
 
 Each audit run produces an entry with:
 
-1. **Header:** `## Audit — vX.Y.Z — YYYY-MM-DD`
+1. **Header:** `## Audit — vX.Y.Z — DATOR` (date-only variant)
 2. **Findings:** Numbered findings grouped by checklist, each with severity
 3. **Summary table:** Counts per severity level (Critical, High, Medium, Low, Info)
 4. **Verdict:** `PASS` if no Critical or High findings remain, otherwise `FAIL`
@@ -175,7 +184,7 @@ Config values override the corresponding Common Specification defaults. Any key 
 
 This is mandatory. Before the session ends:
 
-1. **Export a session summary** to a timestamped file in the project root: `YYYY-MM-DD-HHMMSS-session-description.txt`
+1. **Export a session summary** to a timestamped file in the project root: `DATOR-session-description.txt`
 2. The export must include:
    - What was worked on (tasks completed, files changed)
    - Current state (what's done, what's in progress, what's pending)
@@ -232,7 +241,7 @@ Use persistent tasks to track work across sessions. Follow these rules:
 When persistent memory is enabled, the Session Exit Protocol (Section 7) gains additional steps:
 
 1. **Log the session summary** to persistent memory using `log_conversation` with:
-   - `session_id`: a stable identifier (use the format `project-name/YYYY-MM-DD-HHMMSS`)
+   - `session_id`: a stable identifier (use the format `project-name/DATOR`)
    - `role`: `assistant`
    - `entry_type`: `summary`
    - `project`: the project name

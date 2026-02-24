@@ -1,4 +1,4 @@
-# leafhill.io Development Rules (v1.2.2)
+# leafhill.io Development Rules (v1.2.3)
 
 You are an AI coding assistant following the leafhill.io development skill.
 
@@ -39,8 +39,11 @@ When the system version is updated, always update `application_version.txt` with
 ## Release Audit Protocol
 On every minor or major version bump, perform a mandatory release audit before distribution. Act as Senior Quality Officer and CISO. Review all distribution copies against: OWASP Top 10+ adapted for AI skill instructions (injection risks, access control, data exposure, security misconfiguration, dependencies, logging, prompt injection resistance, supply chain risks, excessive permissions, insecure defaults), ISO 27001 checks (information classification, access control policy, change management, incident response, asset management), and quality review (consistency across dist copies, completeness, clarity, version alignment). Output numbered findings with severity (Critical/High/Medium/Low/Info). Critical and High must be resolved before release. Write all findings to the audit output files (see below).
 
+## DATOR Variable
+**DATOR** is the standard datetime format for all timestamps. Format: `%Y%m%d%H%M%S` (e.g., `20260224140244`). Date-only variant: `%Y%m%d` (e.g., `20260224`) — used only for audit headers. Use DATOR for all file names, session IDs, and timestamps. Do not use other date formats.
+
 ## Audit Output Files
-Write audit findings to two files in the project root: `INFORMATIONSECURITY_AUDIT.md` (OWASP + ISO 27001 findings) and `QUALITY_AUDIT.md` (Quality Review findings). Each entry has a header (`## Audit — vX.Y.Z — YYYY-MM-DD`), numbered findings with severity, a summary table, and a verdict (PASS/FAIL). New audits are prepended above existing content — old entries are never removed. If the file exists, read and prepend; if not, create it.
+Write audit findings to two files in the project root: `INFORMATIONSECURITY_AUDIT.md` (OWASP + ISO 27001 findings) and `QUALITY_AUDIT.md` (Quality Review findings). Each entry has a header (`## Audit — vX.Y.Z — DATOR` using date-only variant), numbered findings with severity, a summary table, and a verdict (PASS/FAIL). New audits are prepended above existing content — old entries are never removed. If the file exists, read and prepend; if not, create it.
 
 ## File and Directory Creation
 - Never use glob patterns or brace expansion when creating files or directories
@@ -63,7 +66,7 @@ Projects can use `leafhill.config.md` to override defaults:
 - persistent_memory: on | off (default: on)
 
 ## Session Exit Protocol
-Before ending a session, always export a session summary to a timestamped file (`YYYY-MM-DD-HHMMSS-session-description.txt`) in the project root. Include: what was worked on, current state, decisions made, next steps. Never exit without saving. When `persistent_memory` is enabled, also log the summary to persistent memory and update task statuses. See Persistent Memory below.
+Before ending a session, always export a session summary to a timestamped file (`DATOR-session-description.txt`) in the project root. Include: what was worked on, current state, decisions made, next steps. Never exit without saving. When `persistent_memory` is enabled, also log the summary to persistent memory and update task statuses. See Persistent Memory below.
 
 ## Persistent Memory
 When `persistent_memory` is enabled (default: on), use the leafhill-persistent-memory MCP server for task tracking and cross-session continuity.
@@ -85,7 +88,7 @@ Memory and context:
 - Link related tasks, memories, and conversations with meaningful relation labels
 
 Session integration:
-- On session exit, also log the summary via `log_conversation` (session_id: project-name/YYYY-MM-DD-HHMMSS, entry_type: summary)
+- On session exit, also log the summary via `log_conversation` (session_id: project-name/DATOR, entry_type: summary)
 - Update all task statuses before exiting
 - The timestamped file export remains mandatory — persistent memory is an addition, not a replacement
 
