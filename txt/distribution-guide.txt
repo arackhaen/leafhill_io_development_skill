@@ -1,7 +1,7 @@
 leafhill.io Development Skill — Distribution & Setup Guide
 ============================================================
 
-Version: 1.2.0
+Version: 1.2.2
 
 
 SKILL STRUCTURE
@@ -231,3 +231,8 @@ Distribution files:
     dist/cursor/.cursorrules                  For Cursor
     dist/generic/leafhill_dev.md              For Gemini, Codex, other tools
     dist/config/leafhill.config.template.md   Config template copy
+
+Tar archive contents (leafhill-dev.tar.gz):
+    .claude/skills/leafhill-dev/SKILL.md    Skill file for Claude Code
+    leafhill.config.md-X.Y.Z                Config template (versioned to avoid overwrites)
+    install-leafhill-dev-skill.sh           Installer script (uniquely named to avoid overwrites)

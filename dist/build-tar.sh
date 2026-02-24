@@ -88,10 +88,10 @@ trap 'rm -rf "$STAGING_DIR"' EXIT
 
 mkdir -p "$STAGING_DIR/.claude/skills/leafhill-dev"
 cp "$SCRIPT_DIR/claude/leafhill-dev/SKILL.md" "$STAGING_DIR/.claude/skills/leafhill-dev/SKILL.md"
-cp "$PROJECT_DIR/leafhill.config.template.md" "$STAGING_DIR/leafhill.config.md"
-cp "$SCRIPT_DIR/install.sh" "$STAGING_DIR/install.sh"
+cp "$PROJECT_DIR/leafhill.config.template.md" "$STAGING_DIR/leafhill.config.md-$NEW_VERSION"
+cp "$SCRIPT_DIR/install-leafhill-dev-skill.sh" "$STAGING_DIR/install-leafhill-dev-skill.sh"
 
-tar czf "$OUTPUT" -C "$STAGING_DIR" .claude leafhill.config.md install.sh
+tar czf "$OUTPUT" -C "$STAGING_DIR" .claude "leafhill.config.md-$NEW_VERSION" install-leafhill-dev-skill.sh
 
 echo ""
 echo "Build successful: $OUTPUT"

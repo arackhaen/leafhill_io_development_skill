@@ -1,6 +1,6 @@
 # leafhill.io Development Skill
 
-**Version:** 1.2.0
+**Version:** 1.2.2
 **Author:** leafhill.io
 
 You are an AI coding assistant following the leafhill.io development skill. This document defines your coding standards, project structure conventions, and collaboration rules.
@@ -77,6 +77,12 @@ When `roam_code` is enabled (default: `on`), perform this check at the start of 
 ## 3.1 Release Audit Protocol
 
 On every minor or major version bump, perform a mandatory release audit before distribution. Act as Senior Quality Officer and CISO. Review all distribution copies against: OWASP Top 10+ adapted for AI skill instructions (injection risks, access control, data exposure, security misconfiguration, dependencies, logging, prompt injection resistance, supply chain risks, excessive permissions, insecure defaults), ISO 27001 checks (information classification, access control policy, change management, incident response, asset management), and quality review (consistency across dist copies, completeness, clarity, version alignment). Output numbered findings with severity (Critical/High/Medium/Low/Info). Critical and High must be resolved before release.
+
+Write all findings to the audit output files defined in Section 3.2.
+
+## 3.2 Audit Output Files
+
+Write audit findings to two files in the project root: `INFORMATIONSECURITY_AUDIT.md` (OWASP + ISO 27001 findings) and `QUALITY_AUDIT.md` (Quality Review findings). Each entry has a header (`## Audit — vX.Y.Z — YYYY-MM-DD`), numbered findings with severity, a summary table, and a verdict (PASS/FAIL). New audits are prepended above existing content — old entries are never removed. If the file exists, read and prepend; if not, create it.
 
 ## 4. File and Directory Creation
 

@@ -4,7 +4,7 @@ description: Universal AI coding skill for system development — coding standar
 license: Apache-2.0
 metadata:
   author: leafhill.io
-  version: "1.2.0"
+  version: "1.2.2"
 ---
 
 # leafhill.io Development Skill
@@ -109,6 +109,35 @@ Act as both a Senior Quality Officer and a Chief Information Security Officer (C
 2. **Completeness** — Are all documented features actually implemented in every distribution format?
 3. **Clarity** — Are instructions unambiguous and actionable for AI agents?
 4. **Version alignment** — Do all 8 version-bearing files show the same version string?
+
+Write all findings to the audit output files defined in Section 3.2.
+
+## 3.2 Audit Output Files
+
+All audit findings from Section 3.1 must be persisted to audit output files in the project root.
+
+### Output Files
+
+| File | Contents |
+|------|----------|
+| `INFORMATIONSECURITY_AUDIT.md` | OWASP Top 10+ findings and ISO 27001 findings |
+| `QUALITY_AUDIT.md` | Quality Review findings |
+
+### Entry Format
+
+Each audit run produces an entry with:
+
+1. **Header:** `## Audit — vX.Y.Z — YYYY-MM-DD`
+2. **Findings:** Numbered findings grouped by checklist, each with severity
+3. **Summary table:** Counts per severity level (Critical, High, Medium, Low, Info)
+4. **Verdict:** `PASS` if no Critical or High findings remain, otherwise `FAIL`
+
+### Append-to-Top Rule
+
+- **New audits are prepended** above existing content. Old audits are never removed or overwritten.
+- A horizontal rule (`---`) separates entries.
+- **If the file exists:** Read it, prepend the new audit entry, write back.
+- **If the file does not exist:** Create it with the new audit entry as the initial content.
 
 ## 4. File and Directory Creation
 

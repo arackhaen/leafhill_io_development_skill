@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # leafhill-dev installer
-# Usage: ./install.sh [claude|claude-global|cursor|generic <dir>]
+# Usage: ./install-leafhill-dev-skill.sh [claude|claude-global|cursor|generic <dir>]
 #
 # Run from the extracted tar or from the dist/ directory.
 
@@ -12,7 +12,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [[ -f "$SCRIPT_DIR/.claude/skills/leafhill-dev/SKILL.md" ]]; then
   # Running from extracted tar root
   SKILL_MD="$SCRIPT_DIR/.claude/skills/leafhill-dev/SKILL.md"
-  CONFIG_TEMPLATE="$SCRIPT_DIR/leafhill.config.md"
+  CONFIG_TEMPLATE=""
+  for f in "$SCRIPT_DIR"/leafhill.config.md-*; do
+    [[ -f "$f" ]] && CONFIG_TEMPLATE="$f" && break
+  done
   CURSORRULES=""
   GENERIC_MD=""
 elif [[ -f "$SCRIPT_DIR/claude/leafhill-dev/SKILL.md" ]]; then
