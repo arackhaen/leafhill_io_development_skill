@@ -18,6 +18,10 @@ Desktop.ini
 .aider*
 .copilot/
 .codeium/
+.roam/
+
+# Session export files
+????-??-??-??????-*.txt
 
 # Environment and secrets
 .env

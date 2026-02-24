@@ -87,7 +87,7 @@ description: Universal AI coding skill for system development — coding standar
 license: Apache-2.0
 metadata:
   author: leafhill.io
-  version: "1.1.1"
+  version: "1.2.0"
 ---
 ```
 
@@ -280,16 +280,17 @@ test_framework: vitest
 
 ### Available Settings
 
-| Key              | Options                                              | Default        |
-|------------------|------------------------------------------------------|----------------|
-| `type`           | `personal`, `open-source`, `company`                 | `personal`     |
-| `vcs`            | `git`, `none`                                        | `git`          |
-| `branching`      | `simple`, `trunk-based`, `gitflow`                   | `simple`       |
-| `commit_style`   | `conventional`, `free-form`                          | `conventional` |
-| `primary`        | `python`, `javascript`, `typescript`, `go`, `rust`, `other` | auto-detect |
-| `test_framework` | any string (e.g., `pytest`, `jest`, `vitest`)        | auto-detect    |
-| `roam_code`      | `on`, `off`                                          | `on`           |
-| `superpowers`    | `on`, `off`                                          | `on`           |
+| Key                 | Options                                              | Default        |
+|---------------------|------------------------------------------------------|----------------|
+| `type`              | `personal`, `open-source`, `company`                 | `personal`     |
+| `vcs`               | `git`, `none`                                        | `git`          |
+| `branching`         | `simple`, `trunk-based`, `gitflow`                   | `simple`       |
+| `commit_style`      | `conventional`, `free-form`                          | `conventional` |
+| `primary`           | `python`, `javascript`, `typescript`, `go`, `rust`, `other` | auto-detect |
+| `test_framework`    | any string (e.g., `pytest`, `jest`, `vitest`)        | auto-detect    |
+| `roam_code`         | `on`, `off`                                          | `on`           |
+| `superpowers`       | `on`, `off`                                          | `on`           |
+| `persistent_memory` | `on`, `off`                                          | `on`           |
 
 Any setting left blank or removed falls back to the default. See `examples/leafhill.config.example.md` for a complete example.
 
@@ -301,33 +302,39 @@ You can add free-form project-specific rules at the bottom of `leafhill.config.m
 
 ## 7. Required Companion Tools
 
-roam-code and superpowers are **enabled by default** and the skill expects them to be installed. If either is missing, the AI will remind you to install it on every session.
+roam-code, persistent-memory, and superpowers are **enabled by default** and the skill expects them to be installed. If any is missing, the AI will remind you to install it on every session.
 
-### roam-code (Priority 2)
+### roam-code (Priority 2.1)
 
-Provides codebase navigation and context gathering. Install roam-code following its own documentation. The leafhill-dev skill will automatically use it at priority 2.
+Provides codebase navigation and context gathering. Install roam-code following its own documentation. The leafhill-dev skill will automatically use it at priority 2.1.
 
-### superpowers skill (Priority 3)
+### persistent-memory (Priority 2.2)
 
-Provides workflow orchestration — brainstorming, debugging, TDD, code review, and more. Install following superpowers documentation. The leafhill-dev skill will automatically use it at priority 3.
+Provides cross-session task tracking and project memory via the leafhill-persistent-memory MCP server. Install following its documentation and configure as an MCP server. The leafhill-dev skill will automatically use it at priority 2.2.
+
+### superpowers skill (Priority 2.3)
+
+Provides workflow orchestration — brainstorming, debugging, TDD, code review, and more. Install following superpowers documentation. The leafhill-dev skill will automatically use it at priority 2.3.
 
 ### Priority Order
 
 | Priority | Layer                          | Default | Description                                              |
 |----------|--------------------------------|---------|----------------------------------------------------------|
 | 1        | **Leafhill Dev Specifications** | on      | Explicit rules unique to this skill. Always win on conflicts. |
-| 2        | **roam-code**                  | on      | Codebase navigation and context gathering.               |
-| 3        | **superpowers skill**          | on      | Workflow orchestration (brainstorming, debugging, TDD, code review, etc.). |
-| 4        | **Common Specifications**      | on      | General coding standards and best practices defined in this file. |
+| 2.1      | **roam-code**                  | on      | Codebase navigation and context gathering.               |
+| 2.2      | **persistent-memory**          | on      | Cross-session task tracking and project memory.          |
+| 2.3      | **superpowers skill**          | on      | Workflow orchestration (brainstorming, debugging, TDD, code review, etc.). |
+| 3        | **Common Specifications**      | on      | General coding standards and best practices defined in this file. |
 
 ### Disabling a Companion Tool
 
-If you do not want to use roam-code or superpowers in a specific project, set them to `off` in your `leafhill.config.md`:
+If you do not want to use roam-code, persistent-memory, or superpowers in a specific project, set them to `off` in your `leafhill.config.md`:
 
 ```markdown
 ## Companion Tools
 roam_code: off
 superpowers: off
+persistent_memory: off
 ```
 
 When disabled, the skill skips that layer entirely and does not remind you to install it.
@@ -440,13 +447,13 @@ Optionally remove `leafhill.config.md` from your project root.
 ### Conflicts with existing rules
 
 - If you have other instruction files (e.g., an existing `.cursorrules`), merge them manually. The leafhill-dev rules are designed to be non-conflicting with common conventions.
-- The priority system (Leafhill Dev > roam-code > superpowers > Common) resolves conflicts within the skill itself.
+- The priority system (Leafhill Dev > roam-code > persistent-memory > superpowers > Common) resolves conflicts within the skill itself.
 
-### roam-code or superpowers reminder keeps appearing
+### roam-code, persistent-memory, or superpowers reminder keeps appearing
 
-- This is expected — both are enabled by default and the skill requires them. You have two options:
+- This is expected — all three are enabled by default and the skill requires them. You have two options:
   1. **Install them** following their respective documentation.
-  2. **Disable them** by adding `roam_code: off` and/or `superpowers: off` to your `leafhill.config.md`.
+  2. **Disable them** by adding `roam_code: off`, `persistent_memory: off`, and/or `superpowers: off` to your `leafhill.config.md`.
 
 ### Migrating from leafhill_dev (underscores) to leafhill-dev (hyphens)
 

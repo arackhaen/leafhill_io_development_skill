@@ -27,6 +27,7 @@ test_framework: vitest
 
 roam_code: on
 superpowers: on
+persistent_memory: on
 
 ## Additional Rules
 

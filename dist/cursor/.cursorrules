@@ -1,4 +1,4 @@
-# leafhill.io Development Rules (v1.1.1)
+# leafhill.io Development Rules (v1.2.0)
 
 You are an AI coding assistant following the leafhill.io development skill.
 
@@ -7,15 +7,17 @@ You are an AI coding assistant following the leafhill.io development skill.
 | Priority | Layer                          | Default | Description                                    |
 |----------|--------------------------------|---------|------------------------------------------------|
 | 1        | **Leafhill Dev Specifications** | on      | Explicit rules unique to this skill. Always win on conflicts. |
-| 2        | **roam-code**                  | on      | Codebase navigation and context gathering.               |
-| 3        | **superpowers skill**          | on      | Workflow orchestration (brainstorming, debugging, TDD, code review, etc.). |
-| 4        | **Common Specifications**      | on      | General coding standards and best practices defined in this file. |
+| 2.1      | **roam-code**                  | on      | Codebase navigation and context gathering.               |
+| 2.2      | **persistent-memory**          | on      | Cross-session task tracking and project memory.          |
+| 2.3      | **superpowers skill**          | on      | Workflow orchestration (brainstorming, debugging, TDD, code review, etc.). |
+| 3        | **Common Specifications**      | on      | General coding standards and best practices defined in this file. |
 
-roam-code and superpowers are enabled by default and expected to be installed. If not installed, remind the user:
-- "roam-code is required by leafhill_dev but is not currently installed. Please install it for codebase navigation."
-- "superpowers skill is required by leafhill_dev but is not currently installed. Please install it for workflow orchestration."
+roam-code, persistent-memory, and superpowers are enabled by default and expected to be installed. If not installed, remind the user:
+- "roam-code is required by leafhill-dev but is not currently installed. Please install it for codebase navigation."
+- "persistent-memory (leafhill-persistent-memory MCP server) is required by leafhill-dev but is not currently available. Please install it for cross-session task tracking and project memory."
+- "superpowers skill is required by leafhill-dev but is not currently installed. Please install it for workflow orchestration."
 
-Both can be disabled per-project via `leafhill.config.md` (`roam_code: off` / `superpowers: off`). When disabled, skip the layer and do not remind.
+All three can be disabled per-project via `leafhill.config.md` (`roam_code: off` / `persistent_memory: off` / `superpowers: off`). When disabled, skip the layer and do not remind.
 
 ---
 
@@ -55,10 +57,38 @@ Projects can use `leafhill.config.md` to override defaults:
 - test_framework: any string (default: auto-detect)
 - roam_code: on | off (default: on)
 - superpowers: on | off (default: on)
+- persistent_memory: on | off (default: on)
+
+## Session Exit Protocol
+Before ending a session, always export a session summary to a timestamped file (`YYYY-MM-DD-HHMMSS-session-description.txt`) in the project root. Include: what was worked on, current state, decisions made, next steps. Never exit without saving. When `persistent_memory` is enabled, also log the summary to persistent memory and update task statuses. See Persistent Memory below.
+
+## Persistent Memory
+When `persistent_memory` is enabled (default: on), use the leafhill-persistent-memory MCP server for task tracking and cross-session continuity.
+
+At session start when enabled:
+1. Test MCP availability by calling `list_tasks` with the project name. If unavailable, inform the user and continue without it.
+2. If available, load open tasks (pending/in_progress/blocked) and search relevant memories for the project.
+
+Task lifecycle:
+- Create tasks for multi-interaction or multi-session work, not trivial one-off requests
+- Always set `project` to the project name from config or directory name
+- Update status as work progresses: pending -> in_progress -> completed/blocked
+- Use task_type: claude (AI work), human (user action needed), hybrid (both)
+- Use subtasks for large work (2-5 per parent), dependencies only when genuinely blocking
+
+Memory and context:
+- Store decisions, patterns, facts, insights as memories. Tag with project name.
+- Never store secrets, credentials, or sensitive data in memories
+- Link related tasks, memories, and conversations with meaningful relation labels
+
+Session integration:
+- On session exit, also log the summary via `log_conversation` (session_id: project-name/YYYY-MM-DD-HHMMSS, entry_type: summary)
+- Update all task statuses before exiting
+- The timestamped file export remains mandatory — persistent memory is an addition, not a replacement
 
 ---
 
-# COMMON SPECIFICATIONS (Priority 4)
+# COMMON SPECIFICATIONS (Priority 3)
 
 ## Coding Standards
 

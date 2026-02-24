@@ -1,6 +1,6 @@
 # leafhill.io Development Skill
 
-**Version:** 1.1.1
+**Version:** 1.2.0
 **Author:** leafhill.io
 
 You are an AI coding assistant following the leafhill.io development skill. This document defines your coding standards, project structure conventions, and collaboration rules.
@@ -14,18 +14,20 @@ When this skill is active, follow this priority order:
 | Priority | Layer                          | Default | Description                                              |
 |----------|--------------------------------|---------|----------------------------------------------------------|
 | 1        | **Leafhill Dev Specifications** | on      | Explicit rules unique to this skill. Always win on conflicts. |
-| 2        | **roam-code**                  | on      | Codebase navigation and context gathering.               |
-| 3        | **superpowers skill**          | on      | Workflow orchestration (brainstorming, debugging, TDD, code review, etc.). |
-| 4        | **Common Specifications**      | on      | General coding standards and best practices defined in this file. |
+| 2.1      | **roam-code**                  | on      | Codebase navigation and context gathering.               |
+| 2.2      | **persistent-memory**          | on      | Cross-session task tracking and project memory.          |
+| 2.3      | **superpowers skill**          | on      | Workflow orchestration (brainstorming, debugging, TDD, code review, etc.). |
+| 3        | **Common Specifications**      | on      | General coding standards and best practices defined in this file. |
 
 When instructions conflict between layers, the higher-priority layer wins.
 
-**roam-code and superpowers are enabled by default.** They are expected to be installed and used. If either is not installed, always remind the user:
+**roam-code, persistent-memory, and superpowers are enabled by default.** They are expected to be installed and used. If any is not installed, always remind the user:
 
-- _"roam-code is required by leafhill_dev but is not currently installed. Please install it for codebase navigation."_
-- _"superpowers skill is required by leafhill_dev but is not currently installed. Please install it for workflow orchestration."_
+- _"roam-code is required by leafhill-dev but is not currently installed. Please install it for codebase navigation."_
+- _"persistent-memory (leafhill-persistent-memory MCP server) is required by leafhill-dev but is not currently available. Please install it for cross-session task tracking and project memory."_
+- _"superpowers skill is required by leafhill-dev but is not currently installed. Please install it for workflow orchestration."_
 
-Both can be disabled per-project via `leafhill.config.md` by setting `roam_code: off` or `superpowers: off`. When disabled, skip the layer entirely and do not remind the user.
+All three can be disabled per-project via `leafhill.config.md` by setting `roam_code: off`, `persistent_memory: off`, or `superpowers: off`. When disabled, skip the layer entirely and do not remind the user.
 
 ---
 
@@ -92,16 +94,17 @@ On every minor or major version bump, perform a mandatory release audit before d
 
 Projects using this skill can place a `leafhill.config.md` in the project root to override Common Specification defaults. The config supports these keys:
 
-| Key              | Options                                              | Default        |
-|------------------|------------------------------------------------------|----------------|
-| `type`           | `personal`, `open-source`, `company`                 | `personal`     |
-| `vcs`            | `git`, `none`                                        | `git`          |
-| `branching`      | `simple`, `trunk-based`, `gitflow`                   | `simple`       |
-| `commit_style`   | `conventional`, `free-form`                          | `conventional` |
-| `primary`        | `python`, `javascript`, `typescript`, `go`, `rust`, `other` | auto-detect |
-| `test_framework` | any string (e.g., `pytest`, `jest`, `vitest`)        | auto-detect    |
-| `roam_code`      | `on`, `off`                                          | `on`           |
-| `superpowers`    | `on`, `off`                                          | `on`           |
+| Key                 | Options                                              | Default        |
+|---------------------|------------------------------------------------------|----------------|
+| `type`              | `personal`, `open-source`, `company`                 | `personal`     |
+| `vcs`               | `git`, `none`                                        | `git`          |
+| `branching`         | `simple`, `trunk-based`, `gitflow`                   | `simple`       |
+| `commit_style`      | `conventional`, `free-form`                          | `conventional` |
+| `primary`           | `python`, `javascript`, `typescript`, `go`, `rust`, `other` | auto-detect |
+| `test_framework`    | any string (e.g., `pytest`, `jest`, `vitest`)        | auto-detect    |
+| `roam_code`         | `on`, `off`                                          | `on`           |
+| `superpowers`       | `on`, `off`                                          | `on`           |
+| `persistent_memory` | `on`, `off`                                          | `on`           |
 
 Config values override the corresponding defaults. Any key left blank or removed falls back to the default.
 
@@ -119,6 +122,62 @@ This is mandatory. Before the session ends:
    - Next steps or open items
 3. **Never exit without saving.** If the user signals they are done or the session is ending, proactively create the export file before wrapping up.
 4. **Remind the user** if they attempt to end the session without an export: _"Before we wrap up, let me save a session summary file."_
+5. **Persistent memory logging.** When `persistent_memory` is enabled, also log the summary to persistent memory and update task statuses. See Section 8.4 for details.
+
+## 8. Persistent Memory
+
+When `persistent_memory` is enabled (default: `on`), use the leafhill-persistent-memory MCP server for task tracking and cross-session continuity.
+
+### 8.1 Availability Check
+
+At the start of every session when `persistent_memory` is `on`:
+
+1. **Test MCP availability.** Attempt to call `list_tasks` with `project` set to the project name from `leafhill.config.md` (or the project root directory name if no config exists).
+   - If the call fails or the tool is not available, inform the user:
+     _"persistent-memory (leafhill-persistent-memory MCP server) is required by leafhill-dev but is not currently available. Please install it for cross-session task tracking and project memory."_
+   - Continue the session normally without persistent memory features.
+
+2. **Load project context.** If the MCP is available:
+   - Call `list_tasks` filtered by the project name. Display a brief summary of open tasks (pending, in_progress, blocked) if any exist.
+   - Call `search_memories` with the project name to surface any relevant stored context.
+   - Do not display completed or deleted tasks unless the user asks.
+
+### 8.2 Task Lifecycle
+
+Use persistent tasks to track work across sessions. Follow these rules:
+
+- **Create a task** when the user starts a unit of work that may span multiple interactions or sessions (e.g., "implement authentication," "fix the deployment pipeline," "refactor the data layer"). Do not create tasks for trivial one-off requests (e.g., "rename this variable," "what does this function do?").
+- **Set the `project` field** to the project name from `leafhill.config.md`, or the project root directory name if no config exists. This is mandatory on every task.
+- **Update status** as work progresses:
+  - `pending` — task is created but work has not started
+  - `in_progress` — actively working on it
+  - `completed` — work is finished and verified
+  - `blocked` — cannot proceed; add a description of what is blocking it
+- **Use `task_type`** to indicate responsibility:
+  - `claude` — the AI will complete this task
+  - `human` — requires user action (e.g., "review PR," "provision database")
+  - `hybrid` — requires both AI and user effort
+- **Use subtasks** (`parent_id`) to break large tasks into steps when the scope is clear. Do not over-decompose; 2–5 subtasks per parent is typical.
+- **Use dependencies** (`add_task_dep`) when one task genuinely blocks another. Do not add dependencies speculatively.
+
+### 8.3 Memory and Context
+
+- **Store a memory** (`store_memory`) when a significant decision, pattern, or project fact emerges that future sessions should know. Use the project name as a tag. Use descriptive categories: `decisions`, `patterns`, `facts`, `insights`.
+- **Do not store secrets, credentials, or sensitive data** in memories. This includes API keys, tokens, passwords, and connection strings.
+- **Link related entities** (`create_link`) when a task is discussed in a conversation or relates to a stored memory. Use meaningful relation labels: `discusses`, `resolves`, `caused_by`, `relates_to`, `requires_input`.
+
+### 8.4 Session Integration
+
+When persistent memory is enabled, the Session Exit Protocol (Section 7) gains additional steps:
+
+1. **Log the session summary** to persistent memory using `log_conversation` with:
+   - `session_id`: a stable identifier (use the format `project-name/YYYY-MM-DD-HHMMSS`)
+   - `role`: `assistant`
+   - `entry_type`: `summary`
+   - `project`: the project name
+   - `content`: the same summary content written to the timestamped file
+2. **Update task statuses.** Before exiting, update any tasks that changed during the session (mark completed work as `completed`, note newly blocked items as `blocked`).
+3. **The timestamped file export (Section 7) remains mandatory.** Persistent memory logging is an addition, not a replacement. Both happen on session exit.
 
 ---
 
