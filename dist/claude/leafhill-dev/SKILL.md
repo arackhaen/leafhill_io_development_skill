@@ -4,7 +4,7 @@ description: Universal AI coding skill for system development — coding standar
 license: Apache-2.0
 metadata:
   author: leafhill.io
-  version: "1.2.3"
+  version: "1.3.0"
 ---
 
 # leafhill.io Development Skill
@@ -55,21 +55,35 @@ When `roam_code` is enabled (default: `on`), perform this check at the start of 
 1. **Verify roam-code is installed.** Run `roam --version`.
    - If the command is not found, remind the user:
      _"roam-code is required by leafhill-dev but is not currently installed. Please install it for codebase navigation."_
-   - Stop here. Do not proceed with steps 2–4.
+   - Stop here. Do not proceed with steps 2–6.
 
 2. **Check if CLAUDE.md exists.** Look for `CLAUDE.md` in the project root.
    - If it exists, run `roam describe` and check whether the first non-empty line of its output already appears in CLAUDE.md.
-     - If found, the description is already present. Stop here.
+     - If found, the description is already present. Skip to step 5.
    - If it does not exist, proceed to step 3.
 
 3. **Prompt the user.**
    _"roam-code is installed. Would you like me to run `roam describe` and add the codebase description to your CLAUDE.md?"_
-   - If the user declines, stop here.
+   - If the user declines, skip to step 5.
 
 4. **Run and inject.**
    - Run `roam describe` and capture the output.
    - If CLAUDE.md exists, prepend the output to the beginning of the file, followed by a blank line, then the existing content.
    - If CLAUDE.md does not exist, create it with the roam describe output as the full content.
+
+5. **Update config — codebase description.**
+   - If `leafhill.config.md` exists and has a `## Project Status` section:
+     - Run `roam describe` (reuse the output from step 4 if already captured).
+     - Find the `codebase_description:` key in the `## Project Status` section.
+     - Replace everything between `codebase_description:` and the next key or section heading with the roam describe output, each line prefixed with `> ` (blockquote format).
+     - If the description is already present and matches, skip the write.
+
+6. **Update config — health check.**
+   - If `leafhill.config.md` exists and has a `## Project Status` section:
+     - Run `roam health` and capture the output. If the command fails, skip this step silently.
+     - Extract the health score (e.g., `99/100`) from the output.
+     - Read the current project version from `application_version.txt`.
+     - Set the `health_check:` value to: `SCORE -- DATOR -- vX.Y.Z` using the date-only DATOR variant (e.g., `99/100 -- 20260225 -- v1.2.3`).
 
 ## 3. Version Tracking
 
@@ -110,7 +124,7 @@ Act as both a Senior Quality Officer and a Chief Information Security Officer (C
 3. **Clarity** — Are instructions unambiguous and actionable for AI agents?
 4. **Version alignment** — Do all 8 version-bearing files show the same version string?
 
-Write all findings to the audit output files defined in Section 3.3.
+Write all findings to the audit output files defined in Section 3.3. After writing audit output files, also update the `## Project Status` section in `leafhill.config.md` (if the file and section exist) — see Section 3.3 for details.
 
 ## 3.2 DATOR Variable
 
@@ -148,6 +162,17 @@ Each audit run produces an entry with:
 - **If the file exists:** Read it, prepend the new audit entry, write back.
 - **If the file does not exist:** Create it with the new audit entry as the initial content.
 
+### Config Status Update
+
+After writing to the audit output files, also update `leafhill.config.md` if it exists and contains a `## Project Status` section:
+
+| Config Key | Value Format | Source |
+|------------|-------------|--------|
+| `quality_audit` | `VERDICT vX.Y.Z -- DATOR` | Verdict from `QUALITY_AUDIT.md` entry |
+| `infosec_audit` | `VERDICT vX.Y.Z -- DATOR` | Verdict from `INFORMATIONSECURITY_AUDIT.md` entry |
+
+Use the date-only DATOR variant. If the config file does not exist or lacks the `## Project Status` section, skip this step silently.
+
 ## 4. File and Directory Creation
 
 - **Never use glob patterns or brace expansion** (e.g., `{a,b,c}`, `**/*.ts`) when creating files or directories.
@@ -177,6 +202,17 @@ Projects using this skill can place a `leafhill.config.md` in the project root t
 | `persistent_memory` | `on`, `off`                                          | `on`           |
 
 Config values override the corresponding Common Specification defaults. Any key left blank or removed falls back to the default.
+
+### Auto-Populated Keys (Project Status)
+
+The `## Project Status` section in the config contains keys that are automatically written by the skill. Users should not edit these manually.
+
+| Key                    | Populated By                    | Format                                       |
+|------------------------|---------------------------------|----------------------------------------------|
+| `codebase_description` | Section 2 (session startup)     | Blockquote (`> ` prefixed lines)             |
+| `health_check`         | Section 2 (session startup)     | `SCORE -- DATOR -- vX.Y.Z`                   |
+| `quality_audit`        | Section 3.1/3.3 (release audit) | `VERDICT vX.Y.Z -- DATOR`                    |
+| `infosec_audit`        | Section 3.1/3.3 (release audit) | `VERDICT vX.Y.Z -- DATOR`                    |
 
 ## 7. Session Exit Protocol
 
