@@ -3,7 +3,7 @@
 **Version:** 1.3.0
 **Author:** leafhill.io
 
-You are an AI coding assistant following the leafhill.io development skill. This document defines your coding standards, project structure conventions, and collaboration rules.
+Universal AI coding skill for establishing and enforcing language-agnostic development standards. Use when defining code style rules, naming conventions, or documentation standards; scaffolding new project directory structures and boilerplate files; or documenting team workflow conventions such as branching strategies, commit message formats, and pull request processes. Do not use for framework-specific architecture patterns (React, Angular, Django, Rails), automated CI/CD pipeline authoring, cloud infrastructure provisioning (Terraform, Pulumi, CDK), or security vulnerability testing.
 
 ---
 
@@ -229,9 +229,9 @@ General coding standards and best practices. These apply unless overridden by hi
 
 ---
 
-## 6. Coding Standards
+## Coding Standards
 
-### 6.1 Naming Conventions
+### Naming Conventions
 
 | Element       | Style            | Examples                          |
 |---------------|------------------|-----------------------------------|
@@ -245,32 +245,32 @@ General coding standards and best practices. These apply unless overridden by hi
 
 When the config specifies a primary language, follow that language's conventions throughout.
 
-### 6.2 Code Organization
+### Code Organization
 
-- One concern per file with a single, clear responsibility.
-- Group by feature, not by type.
-- Keep files under ~300 lines.
-- Imports at the top: standard library, then third-party, then local (separated by blank lines).
+1. Assign one concern per file with a single, clear responsibility.
+2. Group by feature, not by type.
+3. Keep files under ~300 lines. Split larger files by responsibility.
+4. Place imports at the top: standard library, then third-party, then local (separated by blank lines).
 
-### 6.3 Documentation
+### Documentation
 
-- Only comment the _why_, not the _what_.
-- Public APIs need docstrings.
-- No commented-out code — use version control.
-- README.md is mandatory.
+1. Add comments only when the _why_ is not obvious from the code.
+2. Add docstrings to public API functions, classes, and modules.
+3. Remove commented-out code — use version control instead.
+4. Include a `README.md` in every project.
 
-### 6.4 Error Handling
+### Error Handling
 
-- Validate at system boundaries (user input, API calls, file I/O). Trust internal code.
-- Fail early and clearly.
-- Use typed errors when the language supports them.
-- Log actionable information: what happened, what was expected, and enough context to debug.
+1. Validate at system boundaries (user input, API calls, file I/O). Trust internal code.
+2. Fail early and clearly.
+3. Use typed errors when the language supports them.
+4. Log actionable information: what happened, what was expected, and enough context to debug.
 
 ---
 
-## 7. Project Structure
+## Project Structure
 
-### 7.1 Standard Layout
+### Standard Layout
 
 ```
 project-root/
@@ -285,29 +285,29 @@ project-root/
 └── leafhill.config.md    # Leafhill config (optional)
 ```
 
-### 7.2 Required Files
+### Required Files
 
 - `README.md` — what the project does and how to run it
 - `.gitignore` — appropriate for the project's language/framework (when using git)
 
-### 7.3 Config Patterns
+### Config Patterns
 
-- Environment variables for secrets. Never commit secrets.
-- `.env.example` to document required env vars (no actual values).
-- Keep configuration separate from code.
+1. Store secrets in environment variables. Never commit secrets.
+2. Provide a `.env.example` to document required env vars (no actual values).
+3. Keep configuration separate from code.
 
 ---
 
-## 8. Development Workflow
+## Development Workflow
 
-### 8.1 Version Control (default: git)
+### Version Control (default: git)
 
-- Initialize a repo if one doesn't exist and the user asks for project setup.
-- Use appropriate `.gitignore`.
-- Commit early, commit often. One logical change per commit.
-- When VCS is `none`: skip all git-related actions.
+1. Initialize a repo if one does not exist and the user asks for project setup.
+2. Use an appropriate `.gitignore`.
+3. Commit early, commit often. One logical change per commit.
+4. When VCS is `none`: skip all git-related actions.
 
-### 8.2 Branching (default: simple)
+### Branching (default: simple)
 
 | Strategy      | Description                                                   |
 |---------------|---------------------------------------------------------------|
@@ -315,53 +315,53 @@ project-root/
 | `trunk-based` | All work on `main`, feature flags for incomplete work         |
 | `gitflow`     | `main`, `develop`, `feature/*`, `release/*`, `hotfix/*`       |
 
-### 8.3 Commit Conventions (default: conventional)
+### Commit Conventions (default: conventional)
 
 Format: `type(scope): description`
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `build`, `ci`, `perf`
 
-### 8.4 Code Review
+### Code Review
 
-- PRs under 400 lines changed when possible.
-- Descriptive PR titles.
-- Review your own diff before requesting review.
+1. Keep pull requests under 400 lines changed when possible.
+2. Write descriptive PR titles.
+3. Review the diff before requesting review from others.
 
-### 8.5 Testing
+### Testing
 
-- Write tests for business logic.
-- Test behavior, not implementation.
-- Descriptive test names.
-- Keep tests fast.
-- Test file location mirrors source structure.
-
----
-
-## 9. AI Behavior (Common)
-
-### 9.1 General Behavior
-
-- **Read before writing.** Always read existing code before modifying it.
-- **Stay in scope.** Only modify files relevant to the current task.
-- **Minimal changes.** No unrequested features, abstractions, or improvements.
-- **Respect existing patterns.** Follow codebase conventions even if they differ from these defaults.
-- **Ask before destructive actions.** Confirm before deleting files, dropping tables, or force-pushing.
-
-### 9.2 Communication Style
-
-- Be concise. Short, direct responses.
-- Show code examples over explanations.
-- Surface trade-offs when multiple approaches exist.
-- Admit uncertainty.
+1. Write tests for business logic.
+2. Test behavior, not implementation.
+3. Name tests descriptively.
+4. Keep tests fast.
+5. Mirror source structure in test file locations.
 
 ---
 
-## 10. Language-Specific Notes
+## AI Behavior (Common)
 
-**JavaScript / TypeScript:** `const` > `let`, never `var`. Strict equality (`===`). Async/await over raw promises. Don't mix JS and TS.
+### General Behavior
 
-**Python:** PEP 8. Type hints for function signatures. F-strings. Virtual environments.
+1. **Read before writing.** Read existing code before modifying it.
+2. **Stay in scope.** Only modify files relevant to the current task.
+3. **Make minimal changes.** Do not add unrequested features, abstractions, or improvements.
+4. **Respect existing patterns.** Follow codebase conventions even if they differ from these defaults.
+5. **Confirm before destructive actions.** Deleting files, dropping tables, or force-pushing — confirm with the user first.
 
-**Go:** Standard project layout. `gofmt`/`goimports`. Explicit error handling.
+### Communication Style
 
-**Rust:** `clippy` lints. `Result` over `unwrap()` in library code. `cargo fmt`.
+1. Keep responses concise. Short, direct answers.
+2. Prefer code examples over lengthy explanations.
+3. Surface trade-offs when multiple approaches exist.
+4. State uncertainty explicitly rather than guessing.
+
+---
+
+## Language-Specific Notes
+
+**JavaScript / TypeScript:** Prefer `const` over `let`, never `var`. Prefer strict equality (`===`). Prefer async/await over raw promises. Do not mix JS and TS.
+
+**Python:** Follow PEP 8. Add type hints to function signatures. Prefer f-strings. Use virtual environments.
+
+**Go:** Follow standard project layout. Run `gofmt`/`goimports`. Handle errors explicitly.
+
+**Rust:** Enable `clippy` lints. Prefer `Result` over `unwrap()` in library code. Run `cargo fmt`.
