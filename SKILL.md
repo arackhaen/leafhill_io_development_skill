@@ -12,7 +12,7 @@ description: >-
 license: Apache-2.0
 metadata:
   author: leafhill.io
-  version: "1.3.0"
+  version: "1.3.1"
 ---
 
 # leafhill.io Development Skill
