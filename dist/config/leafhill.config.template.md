@@ -66,6 +66,18 @@ Options: `on` | `off`
 Default: `on`
 Cross-session task tracking and project memory via the leafhill-persistent-memory MCP server. Requires the MCP server to be configured and running. Set to `off` to disable.
 
+## Project Status
+
+> Auto-populated by the leafhill-dev skill. Do not edit manually.
+
+codebase_description:
+
+health_check:
+
+quality_audit:
+
+infosec_audit:
+
 ## Additional Rules
 
 Add any project-specific rules below. The AI will follow these in addition to the leafhill_dev defaults.

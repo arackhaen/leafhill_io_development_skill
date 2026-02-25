@@ -1,6 +1,6 @@
 # leafhill.io Development Skill
 
-**Version:** 1.2.3
+**Version:** 1.3.0
 **Author:** leafhill.io
 
 You are an AI coding assistant following the leafhill.io development skill. This document defines your coding standards, project structure conventions, and collaboration rules.
@@ -53,21 +53,35 @@ When `roam_code` is enabled (default: `on`), perform this check at the start of 
 1. **Verify roam-code is installed.** Run `roam --version`.
    - If the command is not found, remind the user:
      _"roam-code is required by leafhill-dev but is not currently installed. Please install it for codebase navigation."_
-   - Stop here. Do not proceed with steps 2–4.
+   - Stop here. Do not proceed with steps 2–6.
 
 2. **Check if CLAUDE.md exists.** Look for `CLAUDE.md` in the project root.
    - If it exists, run `roam describe` and check whether the first non-empty line of its output already appears in CLAUDE.md.
-     - If found, the description is already present. Stop here.
+     - If found, the description is already present. Skip to step 5.
    - If it does not exist, proceed to step 3.
 
 3. **Prompt the user.**
    _"roam-code is installed. Would you like me to run `roam describe` and add the codebase description to your CLAUDE.md?"_
-   - If the user declines, stop here.
+   - If the user declines, skip to step 5.
 
 4. **Run and inject.**
    - Run `roam describe` and capture the output.
    - If CLAUDE.md exists, prepend the output to the beginning of the file, followed by a blank line, then the existing content.
    - If CLAUDE.md does not exist, create it with the roam describe output as the full content.
+
+5. **Update config — codebase description.**
+   - If `leafhill.config.md` exists and has a `## Project Status` section:
+     - Run `roam describe` (reuse the output from step 4 if already captured).
+     - Find the `codebase_description:` key in the `## Project Status` section.
+     - Replace everything between `codebase_description:` and the next key or section heading with the roam describe output, each line prefixed with `> ` (blockquote format).
+     - If the description is already present and matches, skip the write.
+
+6. **Update config — health check.**
+   - If `leafhill.config.md` exists and has a `## Project Status` section:
+     - Run `roam health` and capture the output. If the command fails, skip this step silently.
+     - Extract the health score (e.g., `99/100`) from the output.
+     - Read the current project version from `application_version.txt`.
+     - Set the `health_check:` value to: `SCORE -- DATOR -- vX.Y.Z` using the date-only DATOR variant (e.g., `99/100 -- 20260225 -- v1.2.3`).
 
 ## 3. Version Tracking
 
@@ -78,7 +92,7 @@ When `roam_code` is enabled (default: `on`), perform this check at the start of 
 
 On every minor or major version bump, perform a mandatory release audit before distribution. Act as Senior Quality Officer and CISO. Review all distribution copies against: OWASP Top 10+ adapted for AI skill instructions (injection risks, access control, data exposure, security misconfiguration, dependencies, logging, prompt injection resistance, supply chain risks, excessive permissions, insecure defaults), ISO 27001 checks (information classification, access control policy, change management, incident response, asset management), and quality review (consistency across dist copies, completeness, clarity, version alignment). Output numbered findings with severity (Critical/High/Medium/Low/Info). Critical and High must be resolved before release.
 
-Write all findings to the audit output files defined in Section 3.3.
+Write all findings to the audit output files defined in Section 3.3. After writing audit output files, also update the `## Project Status` section in `leafhill.config.md` (if the file and section exist) — see Section 3.3 for details.
 
 ## 3.2 DATOR Variable
 
@@ -92,6 +106,8 @@ Use DATOR for all file names, session IDs, and timestamps. Do not use other date
 ## 3.3 Audit Output Files
 
 Write audit findings to two files in the project root: `INFORMATIONSECURITY_AUDIT.md` (OWASP + ISO 27001 findings) and `QUALITY_AUDIT.md` (Quality Review findings). Each entry has a header (`## Audit — vX.Y.Z — DATOR` using date-only variant), numbered findings with severity, a summary table, and a verdict (PASS/FAIL). New audits are prepended above existing content — old entries are never removed. If the file exists, read and prepend; if not, create it.
+
+After writing to audit output files, also update `leafhill.config.md` if it exists and contains a `## Project Status` section: set `quality_audit:` to `VERDICT vX.Y.Z -- DATOR` and `infosec_audit:` to `VERDICT vX.Y.Z -- DATOR` (date-only DATOR variant). If the config file does not exist or lacks the section, skip silently.
 
 ## 4. File and Directory Creation
 
@@ -122,6 +138,17 @@ Projects using this skill can place a `leafhill.config.md` in the project root t
 | `persistent_memory` | `on`, `off`                                          | `on`           |
 
 Config values override the corresponding defaults. Any key left blank or removed falls back to the default.
+
+### Auto-Populated Keys (Project Status)
+
+The `## Project Status` section in the config contains keys that are automatically written by the skill. Users should not edit these manually.
+
+| Key                    | Populated By                    | Format                                       |
+|------------------------|---------------------------------|----------------------------------------------|
+| `codebase_description` | Section 2 (session startup)     | Blockquote (`> ` prefixed lines)             |
+| `health_check`         | Section 2 (session startup)     | `SCORE -- DATOR -- vX.Y.Z`                   |
+| `quality_audit`        | Section 3.1/3.3 (release audit) | `VERDICT vX.Y.Z -- DATOR`                    |
+| `infosec_audit`        | Section 3.1/3.3 (release audit) | `VERDICT vX.Y.Z -- DATOR`                    |
 
 ## 7. Session Exit Protocol
 

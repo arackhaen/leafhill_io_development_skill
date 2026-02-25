@@ -110,7 +110,7 @@ leafhill_dev/
 
 ## Version
 
-Current version: **1.2.3**
+Current version: **1.3.0**
 
 ## License
 
