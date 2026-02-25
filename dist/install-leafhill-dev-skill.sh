@@ -12,6 +12,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [[ -f "$SCRIPT_DIR/.claude/skills/leafhill-dev/SKILL.md" ]]; then
   # Running from extracted tar root
   SKILL_MD="$SCRIPT_DIR/.claude/skills/leafhill-dev/SKILL.md"
+  REFERENCES_DIR="$SCRIPT_DIR/.claude/skills/leafhill-dev/references"
   CONFIG_TEMPLATE=""
   for f in "$SCRIPT_DIR"/leafhill.config.md-*; do
     [[ -f "$f" ]] && CONFIG_TEMPLATE="$f" && break
@@ -21,6 +22,7 @@ if [[ -f "$SCRIPT_DIR/.claude/skills/leafhill-dev/SKILL.md" ]]; then
 elif [[ -f "$SCRIPT_DIR/claude/leafhill-dev/SKILL.md" ]]; then
   # Running from dist/ folder
   SKILL_MD="$SCRIPT_DIR/claude/leafhill-dev/SKILL.md"
+  REFERENCES_DIR="$SCRIPT_DIR/claude/leafhill-dev/references"
   CONFIG_TEMPLATE="$SCRIPT_DIR/config/leafhill.config.template.md"
   CURSORRULES="$SCRIPT_DIR/cursor/.cursorrules"
   GENERIC_MD="$SCRIPT_DIR/generic/leafhill_dev.md"
@@ -65,8 +67,11 @@ fi
 case "$TARGET" in
   claude)
     PROJECT_ROOT="$(pwd)"
-    mkdir -p "$PROJECT_ROOT/.claude/skills/leafhill-dev"
+    mkdir -p "$PROJECT_ROOT/.claude/skills/leafhill-dev/references"
     cp "$SKILL_MD" "$PROJECT_ROOT/.claude/skills/leafhill-dev/SKILL.md"
+    if [[ -d "$REFERENCES_DIR" ]]; then
+      cp "$REFERENCES_DIR/common-specs.md" "$PROJECT_ROOT/.claude/skills/leafhill-dev/references/"
+    fi
     echo "Installed leafhill-dev to $PROJECT_ROOT/.claude/skills/leafhill-dev/"
     install_config "$PROJECT_ROOT"
     echo "Done. Start a new Claude Code session to activate."
@@ -74,8 +79,11 @@ case "$TARGET" in
 
   claude-global)
     GLOBAL_DIR="$HOME/.claude/skills/leafhill-dev"
-    mkdir -p "$GLOBAL_DIR"
+    mkdir -p "$GLOBAL_DIR/references"
     cp "$SKILL_MD" "$GLOBAL_DIR/SKILL.md"
+    if [[ -d "$REFERENCES_DIR" ]]; then
+      cp "$REFERENCES_DIR/common-specs.md" "$GLOBAL_DIR/references/"
+    fi
     echo "Installed leafhill-dev globally to $GLOBAL_DIR/"
     echo "Done. Start a new Claude Code session to activate."
     ;;

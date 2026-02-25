@@ -86,8 +86,9 @@ echo "Updated version in all 8 files."
 STAGING_DIR="$(mktemp -d)"
 trap 'rm -rf "$STAGING_DIR"' EXIT
 
-mkdir -p "$STAGING_DIR/.claude/skills/leafhill-dev"
+mkdir -p "$STAGING_DIR/.claude/skills/leafhill-dev/references"
 cp "$SCRIPT_DIR/claude/leafhill-dev/SKILL.md" "$STAGING_DIR/.claude/skills/leafhill-dev/SKILL.md"
+cp "$SCRIPT_DIR/claude/leafhill-dev/references/common-specs.md" "$STAGING_DIR/.claude/skills/leafhill-dev/references/common-specs.md"
 cp "$PROJECT_DIR/leafhill.config.template.md" "$STAGING_DIR/leafhill.config.md-$NEW_VERSION"
 cp "$SCRIPT_DIR/install-leafhill-dev-skill.sh" "$STAGING_DIR/install-leafhill-dev-skill.sh"
 

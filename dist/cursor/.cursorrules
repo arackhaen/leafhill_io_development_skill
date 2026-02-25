@@ -1,6 +1,6 @@
 # leafhill.io Development Rules (v1.3.0)
 
-You are an AI coding assistant following the leafhill.io development skill.
+Universal AI coding skill for establishing and enforcing language-agnostic development standards. Use when defining code style rules, naming conventions, or documentation standards; scaffolding new project directory structures and boilerplate files; or documenting team workflow conventions such as branching strategies, commit message formats, and pull request processes. Do not use for framework-specific architecture patterns (React, Angular, Django, Rails), automated CI/CD pipeline authoring, cloud infrastructure provisioning (Terraform, Pulumi, CDK), or security vulnerability testing.
 
 ## Prioritization
 
@@ -120,10 +120,10 @@ Session integration:
 - Imports: standard library, then third-party, then local (separated by blank lines)
 
 ### Documentation
-- Only comment the _why_, not the _what_
-- Public APIs need docstrings
-- No commented-out code
-- README.md is mandatory
+- Add comments only when the _why_ is not obvious from the code
+- Add docstrings to public API functions, classes, and modules
+- Remove commented-out code — use version control
+- Include a README.md in every project
 
 ### Error Handling
 - Validate at system boundaries, trust internal code
@@ -161,19 +161,19 @@ Required files: `README.md`, `.gitignore` (when using git)
 ### General
 - Read existing code before modifying it
 - Stay in scope — do not refactor unrelated code
-- Make minimal changes — no unrequested features or abstractions
+- Make minimal changes — do not add unrequested features or abstractions
 - Respect existing codebase patterns
-- Ask before destructive actions
+- Confirm with the user before destructive actions
 
 ### Communication
-- Be concise and direct
-- Show code examples over lengthy explanations
+- Keep responses concise and direct
+- Prefer code examples over lengthy explanations
 - Surface trade-offs when multiple approaches exist
-- Admit uncertainty
+- State uncertainty explicitly rather than guessing
 
 ## Language Notes
 
-**JS/TS:** const > let, strict equality, async/await, don't mix JS and TS
-**Python:** PEP 8, type hints, f-strings, virtual environments
-**Go:** gofmt/goimports, explicit error handling
-**Rust:** clippy, Result over unwrap(), cargo fmt
+**JS/TS:** Prefer `const` over `let`, prefer strict equality (`===`), prefer async/await, do not mix JS and TS
+**Python:** Follow PEP 8, add type hints, prefer f-strings, use virtual environments
+**Go:** Run `gofmt`/`goimports`, handle errors explicitly
+**Rust:** Enable `clippy`, prefer `Result` over `unwrap()`, run `cargo fmt`
