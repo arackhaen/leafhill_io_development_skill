@@ -1,4 +1,4 @@
-# leafhill.io Development Rules (v1.3.1)
+# leafhill.io Development Rules (v1.4.3)
 
 Universal AI coding skill for establishing and enforcing language-agnostic development standards. Use when defining code style rules, naming conventions, or documentation standards; scaffolding new project directory structures and boilerplate files; or documenting team workflow conventions such as branching strategies, commit message formats, and pull request processes. Do not use for framework-specific architecture patterns (React, Angular, Django, Rails), automated CI/CD pipeline authoring, cloud infrastructure provisioning (Terraform, Pulumi, CDK), or security vulnerability testing.
 
@@ -99,6 +99,28 @@ Session integration:
 - On session exit, also log the summary via `log_conversation` (session_id: project-name/DATOR, entry_type: summary)
 - Update all task statuses before exiting
 - The timestamped file export remains mandatory — persistent memory is an addition, not a replacement
+
+## Stats Dashboard
+The leafhill-dev skill includes a standalone CLI tool `leafhill-stats` for visualizing Claude Code token usage and estimated costs. By default, it performs live scanning of JSONL session files, deduplicating streaming chunks and merging historical data from the stats cache.
+
+### Trigger
+When the user asks about token usage, costs, stats, consumption, or billing:
+1. **Check if `leafhill-stats` is available.** Run `leafhill-stats --help`.
+   - If the command is not found, suggest:
+     _"The leafhill-stats tool is not installed. Run `./install-leafhill-stats.sh` from the leafhill-dev distribution to install it (default: ~/.local/bin/leafhill-stats)."_
+   - Stop here.
+2. **If available**, run `leafhill-stats` and display the output to the user.
+
+### Command Reference
+| Command | Description |
+|---------|-------------|
+| `leafhill-stats` | Show dashboard (live JSONL scan of `~/.claude/projects/**/*.jsonl`, merged with `stats-cache.json`) |
+| `leafhill-stats --cached` | Use cache-only mode (reads `~/.claude/stats-cache.json` only, no JSONL scanning) |
+| `leafhill-stats /path/to/stats.json` | Use a custom stats file (cache-only) |
+| `leafhill-stats --all` | Show full daily history (default: last 30 days) |
+| `leafhill-stats --no-color` | Disable colored output |
+
+**Data source:** In default (live) mode, `leafhill-stats` scans `~/.claude/projects/**/*.jsonl` directly, deduplicates streaming chunks by `requestId`, skips `subagents/` directories, and uses tier-based model matching (handling both dated and undated model IDs like `claude-opus-4-6-20250514` and `opus-4-6`). Historical data from `~/.claude/stats-cache.json` is merged for dates no longer present in JSONL files. Use `--cached` to fall back to cache-only mode.
 
 ---
 

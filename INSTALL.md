@@ -16,9 +16,10 @@ This skill follows the [Agent Skills](https://agentskills.io) open standard, whi
 6. [Per-Project Configuration](#6-per-project-configuration)
 7. [Required Companion Tools](#7-required-companion-tools)
 8. [Verifying the Installation](#8-verifying-the-installation)
-9. [Updating](#9-updating)
-10. [Uninstalling](#10-uninstalling)
-11. [Troubleshooting](#11-troubleshooting)
+9. [Stats Dashboard (leafhill-stats)](#9-stats-dashboard-leafhill-stats)
+10. [Updating](#9-updating)
+11. [Uninstalling](#10-uninstalling)
+12. [Troubleshooting](#11-troubleshooting)
 
 ---
 
@@ -88,7 +89,7 @@ description: Universal AI coding skill for system development — coding standar
 license: Apache-2.0
 metadata:
   author: leafhill.io
-  version: "1.3.1"
+  version: "1.4.3"
 ---
 ```
 
@@ -364,7 +365,62 @@ You can also test specific behaviors:
 
 ---
 
-## 9. Updating
+## 9. Stats Dashboard (leafhill-stats)
+
+The leafhill-dev skill includes an optional CLI tool for visualizing Claude Code token usage and estimated costs.
+
+### Prerequisites
+
+- Python 3.10+
+
+### Installing
+
+From the extracted tar archive or the `dist/` directory:
+
+```
+./install-leafhill-stats.sh
+```
+
+This installs `leafhill-stats` to `~/.local/bin/leafhill-stats` (default).
+
+To install to a custom location:
+
+```
+./install-leafhill-stats.sh ~/.local/bin/leafhill-stats
+```
+
+If `~/.claude/bin` is not in your PATH, the installer will print instructions to add it.
+
+### Usage
+
+```
+leafhill-stats                          # default stats file
+leafhill-stats /path/to/stats.json      # custom stats file
+leafhill-stats --all                    # show full daily history
+leafhill-stats --no-color               # disable colored output
+```
+
+### What It Shows
+
+- **Overview** — total sessions, messages, longest session
+- **Monthly activity** — sessions, messages, tool calls with bar charts
+- **Daily stats** — token usage, sessions, estimated costs per day
+- **Peak consumption** — top 5 days by token usage
+- **Token usage by model** — input, output, cache read, cache write breakdown
+- **Cost estimates** — all-time, monthly, and daily (based on Anthropic API rates)
+- **Session start times** — hourly distribution
+
+### Uninstalling
+
+```
+rm ~/.local/bin/leafhill-stats
+```
+
+Or remove from wherever you installed it.
+
+---
+
+## 10. Updating
 
 When a new version of the skill is released:
 

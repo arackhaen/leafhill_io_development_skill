@@ -1,7 +1,7 @@
 leafhill.io Development Skill — Distribution & Setup Guide
 ============================================================
 
-Version: 1.3.1
+Version: 1.4.3
 
 
 SKILL STRUCTURE
@@ -236,3 +236,36 @@ Tar archive contents (leafhill-dev.tar.gz):
     .claude/skills/leafhill-dev/SKILL.md    Skill file for Claude Code
     leafhill.config.md-X.Y.Z                Config template (versioned to avoid overwrites)
     install-leafhill-dev-skill.sh           Installer script (uniquely named to avoid overwrites)
+    leafhill-stats                          Stats dashboard CLI tool (Python 3.10+)
+    install-leafhill-stats.sh               Stats tool installer
+
+
+9. STATS DASHBOARD (leafhill-stats)
+-----------------------------------
+
+An optional CLI tool for visualizing Claude Code token usage and costs.
+
+Prerequisites:
+    Python 3.10+
+
+Installing:
+    ./install-leafhill-stats.sh              Default: ~/.local/bin/leafhill-stats
+    ./install-leafhill-stats.sh <path>       Custom install location
+
+Usage:
+    leafhill-stats                           Show dashboard
+    leafhill-stats /path/to/stats.json       Custom stats file
+    leafhill-stats --all                     Full daily history
+    leafhill-stats --no-color                Disable colors
+
+What it shows:
+    - Overview (sessions, messages, longest session)
+    - Monthly activity breakdown (sessions, messages, tool calls)
+    - Daily stats with token usage and estimated costs
+    - Peak consumption days
+    - Token usage by model (input, output, cache read, cache write)
+    - Cost estimates (all-time, monthly, daily)
+    - Session start time distribution
+
+Uninstalling:
+    rm ~/.local/bin/leafhill-stats

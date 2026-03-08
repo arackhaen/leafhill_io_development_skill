@@ -91,8 +91,11 @@ cp "$SCRIPT_DIR/claude/leafhill-dev/SKILL.md" "$STAGING_DIR/.claude/skills/leafh
 cp "$SCRIPT_DIR/claude/leafhill-dev/references/common-specs.md" "$STAGING_DIR/.claude/skills/leafhill-dev/references/common-specs.md"
 cp "$PROJECT_DIR/leafhill.config.template.md" "$STAGING_DIR/leafhill.config.md-$NEW_VERSION"
 cp "$SCRIPT_DIR/install-leafhill-dev-skill.sh" "$STAGING_DIR/install-leafhill-dev-skill.sh"
+cp "$PROJECT_DIR/tools/leafhill-stats" "$STAGING_DIR/leafhill-stats"
+cp "$SCRIPT_DIR/install-leafhill-stats.sh" "$STAGING_DIR/install-leafhill-stats.sh"
+cp "$SCRIPT_DIR/deploy-leafhill-dev.sh" "$STAGING_DIR/deploy-leafhill-dev.sh"
 
-tar czf "$OUTPUT" -C "$STAGING_DIR" .claude "leafhill.config.md-$NEW_VERSION" install-leafhill-dev-skill.sh
+tar czf "$OUTPUT" -C "$STAGING_DIR" .claude "leafhill.config.md-$NEW_VERSION" install-leafhill-dev-skill.sh leafhill-stats install-leafhill-stats.sh deploy-leafhill-dev.sh
 
 echo ""
 echo "Build successful: $OUTPUT"

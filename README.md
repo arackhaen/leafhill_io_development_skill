@@ -89,6 +89,10 @@ cp dist/config/leafhill.config.template.md leafhill.config.md
 
 Any key left blank or removed uses the default. See `examples/leafhill.config.example.md` for a complete example.
 
+### Stats Dashboard (leafhill-stats)
+
+An optional CLI tool for visualizing Claude Code token usage and estimated costs. Install with `./install-leafhill-stats.sh` from the distribution. See [INSTALL.md](INSTALL.md) for details.
+
 ## File Structure
 
 ```
@@ -97,11 +101,15 @@ leafhill_dev/
 ├── README.md                       # This file
 ├── INSTALL.md                      # Installation guide for all platforms
 ├── leafhill.config.template.md     # Config template
+├── tools/
+│   └── leafhill-stats              # Stats dashboard CLI tool
 ├── dist/                           # Ready-to-use distribution copies
 │   ├── claude/leafhill-dev/SKILL.md
 │   ├── cursor/.cursorrules
 │   ├── generic/leafhill_dev.md
-│   └── config/leafhill.config.template.md
+│   ├── config/leafhill.config.template.md
+│   ├── install-leafhill-stats.sh   # Stats tool installer
+│   └── build-tar.sh               # Build script
 ├── txt/
 │   └── distribution-guide.txt      # Plain-text setup reference
 └── examples/
@@ -110,7 +118,7 @@ leafhill_dev/
 
 ## Version
 
-Current version: **1.3.1**
+Current version: **1.4.3**
 
 ## License
 

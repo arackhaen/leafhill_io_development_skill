@@ -12,7 +12,7 @@ description: >-
 license: Apache-2.0
 metadata:
   author: leafhill.io
-  version: "1.3.1"
+  version: "1.4.3"
 ---
 
 # leafhill.io Development Skill
@@ -292,6 +292,32 @@ When persistent memory is enabled, the Session Exit Protocol (Section 7) gains a
    - `content`: the same summary content written to the timestamped file
 2. **Update task statuses.** Before exiting, update any tasks that changed during the session (mark completed work as `completed`, note newly blocked items as `blocked`).
 3. **The timestamped file export (Section 7) remains mandatory.** Persistent memory logging is an addition, not a replacement. Both happen on session exit.
+
+## 9. Stats Dashboard
+
+The leafhill-dev skill includes a standalone CLI tool `leafhill-stats` for visualizing Claude Code token usage and estimated costs. By default, it performs live scanning of JSONL session files, deduplicating streaming chunks and merging historical data from the stats cache.
+
+### Trigger
+
+When the user asks about token usage, costs, stats, consumption, or billing:
+
+1. **Check if `leafhill-stats` is available.** Run `leafhill-stats --help`.
+   - If the command is not found, suggest:
+     _"The leafhill-stats tool is not installed. Run `./install-leafhill-stats.sh` from the leafhill-dev distribution to install it (default: ~/.local/bin/leafhill-stats)."_
+   - Stop here.
+2. **If available**, run `leafhill-stats` and display the output to the user.
+
+### Command Reference
+
+| Command | Description |
+|---------|-------------|
+| `leafhill-stats` | Show dashboard (live JSONL scan of `~/.claude/projects/**/*.jsonl`, merged with `stats-cache.json`) |
+| `leafhill-stats --cached` | Use cache-only mode (reads `~/.claude/stats-cache.json` only, no JSONL scanning) |
+| `leafhill-stats /path/to/stats.json` | Use a custom stats file (cache-only) |
+| `leafhill-stats --all` | Show full daily history (default: last 30 days) |
+| `leafhill-stats --no-color` | Disable colored output |
+
+**Data source:** In default (live) mode, `leafhill-stats` scans `~/.claude/projects/**/*.jsonl` directly, deduplicates streaming chunks by `requestId`, skips `subagents/` directories, and uses tier-based model matching (handling both dated and undated model IDs like `claude-opus-4-6-20250514` and `opus-4-6`). Historical data from `~/.claude/stats-cache.json` is merged for dates no longer present in JSONL files. Use `--cached` to fall back to cache-only mode.
 
 ---
 
