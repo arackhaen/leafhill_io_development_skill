@@ -46,6 +46,13 @@ __pycache__/
 venv/
 *.whl
 
+# Build archives
+*.tar.gz
+*.zip
+
+# Session/log data
+*.jsonl
+
 # Build artifacts
 *.o
 *.so
